@@ -1,0 +1,22 @@
+.info-card {
+    width: 250px;
+    height: 250px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 10px;
+    text-align: center;
+}
+
+.info-card-icon {
+    margin-bottom: 10px;
+}
+
+.info-card-text {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
