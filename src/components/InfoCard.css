@@ -12,6 +12,13 @@
     text-align: center;
 }
 
+.info-card:hover {
+    transform: scale(1.05); /* Slightly enlarges the card */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5); /* Adds a deeper shadow */
+    background-color: #f0f0f0; /* Optional: Change background color */
+    cursor: pointer;
+}
+
 .info-card-icon {
     margin-bottom: 10px;
 }
