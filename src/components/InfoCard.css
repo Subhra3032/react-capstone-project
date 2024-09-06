@@ -27,3 +27,8 @@
     font-size: 1.2rem;
     font-weight: bold;
 }
+
+.link-wrapper {
+    text-decoration: none;
+    color: inherit;
+}

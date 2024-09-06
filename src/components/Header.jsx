@@ -1,12 +1,15 @@
 import React from 'react';
 import './Header.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBell, faUser } from '@fortawesome/free-solid-svg-icons'; 
+import { faBell, faUser } from '@fortawesome/free-solid-svg-icons';
+import { Link } from 'react-router-dom';
 
 function Header() {
     return (
         <div className='header'>
-            <div className='logo'>PayPilot</div>
+            <Link to="/" className='link-wrapper'>
+                <div className='logo'>PayPilot</div>
+            </Link>
             <div className='tab-container'>
                 <div className='tab'>
                     <FontAwesomeIcon icon={faBell} className='fa-icon' />   
