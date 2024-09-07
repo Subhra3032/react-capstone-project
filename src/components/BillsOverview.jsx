@@ -24,7 +24,7 @@ function BillsOverview() {
                     <label htmlFor='bill-category'>Bill Category</label>
                     <Dropdown
                         id='bill-category'
-                        options={['Electricity', 'Water', 'Internet', 'Rent']}
+                        options={['All', 'House Rent', 'Debt Payments', 'Groceries', 'Internet Charges', 'Retirement Deposits', 'Cellphone Charges']}
                     />
                 </div>
                 <div className='form-group'>
@@ -43,7 +43,9 @@ function BillsOverview() {
                     />
                 </div>
             </div>
-            <button className='submit-button'>Submit</button>
+            <Link to='/manageBills/billsOverview/allDetails'>
+                <button className='submit-button'>Submit</button>
+            </Link>
         </motion.div>
     );
 }

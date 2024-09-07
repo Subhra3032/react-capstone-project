@@ -1,0 +1,55 @@
+.bills-overview-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Ensure content starts from the top */
+    align-items: center;
+    min-height: 100vh; /* Take up full viewport height */
+    width: 100vw;
+    padding: 0;
+    margin: 0;
+}
+
+.page-title {
+    margin: 40px 0;
+    font-size: 1.8rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+.row {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    margin-bottom: 50px;
+}
+
+.info-component {
+    border-radius: 10px;
+    width: 300px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 1);
+    transition: transform 0.3s;
+}
+
+.info-component:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    background-color: #cc99ff; /* Optional: Change background color */
+    cursor: pointer;
+}
+
+.icon {
+    margin-bottom: 10px;
+}
+
+.text {
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.status {
+    font-weight: bolder;
+    font-size: 1rem;
+}
