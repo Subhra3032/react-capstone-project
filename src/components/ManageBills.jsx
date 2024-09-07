@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import InfoCard from './InfoCard';
 import { faListCheck } from '@fortawesome/free-solid-svg-icons';
 import Feature from './Feature';
+import { Link } from 'react-router-dom';
 
 function ManageBills() {
     return (
@@ -19,10 +20,10 @@ function ManageBills() {
                 <InfoCard icon={faListCheck} text="Manage Bills" />
             </div>
             <div className='features-container'>
-                <Feature text="Add New Bill" />
+                <Feature text="Add New Bill" to='/manageBills/addBills' />
                 <Feature text="Upcoming/Overdue Bills" />
                 <Feature text="Reminder Settings" />
-                <Feature text="Bills Overview" />
+                <Feature text="Bills Overview" to='/manageBills/billsOverview' />
                 <Feature text="Snooze or Mark Paid Bills" />
             </div>
         </motion.div>

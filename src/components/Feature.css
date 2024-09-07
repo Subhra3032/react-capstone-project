@@ -19,3 +19,8 @@
     background-color: #cc99ff; /* Optional: Change background color */
     cursor: pointer;
 }
+
+.link-wrapper {
+    text-decoration: none;
+    color: inherit;
+}

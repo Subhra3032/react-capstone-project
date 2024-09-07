@@ -5,6 +5,7 @@ import { faBell, faUser } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 
 function Header() {
+
     return (
         <div className='header'>
             <Link to="/" className='link-wrapper'>

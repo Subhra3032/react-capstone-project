@@ -5,6 +5,7 @@ import AddBills from './components/AddBills';
 import backgroundImage from './images/capstone-bg-img.jpg';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
+import BillsOverview from './components/BillsOverview';
 
 function App() {
   return (
@@ -14,7 +15,8 @@ function App() {
           <Routes>
             <Route path='/' element={<HomePage />} />
             <Route path='/manageBills' element={<ManageBills />} />
-            <Route path='/addBills' element={<AddBills />} />
+            <Route path='/manageBills/addBills' element={<AddBills />} />
+            <Route path='/manageBills/billsOverview' element={<BillsOverview />} />
           </Routes>
         </div>
       </AnimatePresence>
