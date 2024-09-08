@@ -9,6 +9,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Feature from "./Feature";
 import "./OverdueUpcoming.css";
+import BackButton from "./BackButton";
 const OverdueUpcoming = () => {
   return (
     <motion.div
@@ -31,13 +32,7 @@ const OverdueUpcoming = () => {
           to="/manageBills/upcoming"
         />
       </div>
-      <div className="back-button">
-        <Link to="/manageBills" className="link-wrapper">
-          <button type="button" className="btn btn-secondary">
-            Manage Bills
-          </button>
-        </Link>
-      </div>
+      <BackButton />
     </motion.div>
   );
 };

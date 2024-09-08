@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import BillsOverview from "./components/BillsOverview";
 import OverdueUpcoming from "./components/OverdueUpcoming";
+import PaymentPage from "./components/PaymentPage";
 import "bootstrap/dist/css/bootstrap.css";
 function App() {
   return (
@@ -24,6 +25,10 @@ function App() {
             <Route
               path="/manageBills/overdueUpcoming"
               element={<OverdueUpcoming />}
+            />
+            <Route
+              path="/manageBills/upcoming/payment"
+              element={<PaymentPage />}
             />
           </Routes>
         </div>
