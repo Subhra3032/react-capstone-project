@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import BillsOverview from './components/BillsOverview';
 import BillsOverviewDetails from './components/BillsOverviewDetails';
+import BillDetailsPage from './components/BillDetailsPage';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             <Route path='/manageBills/addBills' element={<AddBills />} />
             <Route path='/manageBills/billsOverview' element={<BillsOverview />} />
             <Route path='/manageBills/billsOverview/allDetails' element={<BillsOverviewDetails />} />
+            <Route path='/manageBills/billsOverview/:category' element={<BillDetailsPage />} />
           </Routes>
         </div>
       </AnimatePresence>

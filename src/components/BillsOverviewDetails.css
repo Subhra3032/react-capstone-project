@@ -16,11 +16,11 @@
     text-align: center;
 }
 
-.row {
+.info-component-container {
     display: flex;
     justify-content: space-around;
-    width: 100%;
     margin-bottom: 50px;
+    gap: 20px;
 }
 
 .info-component {
@@ -52,4 +52,9 @@
 .status {
     font-weight: bolder;
     font-size: 1rem;
+}
+
+.link-wrapper {
+    text-decoration: none;
+    color: inherit;
 }
