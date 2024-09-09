@@ -14,6 +14,12 @@
     font-size: 1.5rem;
 }
 
+.bills-table-container {
+    width: 90%;
+    max-height: 400px; /* Adjust this value based on your design needs */
+    overflow-y: auto;  /* Enables vertical scrolling */
+}
+
 .bills-table {
     width: 90%;
     border-collapse: collapse;

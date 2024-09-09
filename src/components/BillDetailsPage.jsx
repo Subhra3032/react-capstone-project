@@ -28,28 +28,30 @@ function BillDetailsPage() {
             <Link to='/manageBills/billsOverview/allDetails' className='link-wrapper'>
                 <h2>Bills Overview</h2>
             </Link>
-            <table className='bills-table'>
-                <thead>
-                    <tr>
-                        <th>Sl No</th>
-                        <th>Loan Type</th>
-                        <th>Monthly EMI (in Rs)</th>
-                        <th>Due Date</th>
-                        <th>Total Loan Amount (in Rs)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {billsData.map((bill) => (
-                        <tr key={bill.id}>
-                            <td>{bill.id}</td>
-                            <td>{bill.loanType}</td>
-                            <td>{bill.monthlyEMI}</td>
-                            <td>{bill.dueDate}</td>
-                            <td>{bill.totalLoanAmount}</td>
+            <div className='bills-table-container'>
+                <table className='bills-table'>
+                    <thead>
+                        <tr>
+                            <th>Sl No</th>
+                            <th>Loan Type</th>
+                            <th>Monthly EMI (in Rs)</th>
+                            <th>Due Date</th>
+                            <th>Total Loan Amount (in Rs)</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {billsData.map((bill) => (
+                            <tr key={bill.id}>
+                                <td>{bill.id}</td>
+                                <td>{bill.loanType}</td>
+                                <td>{bill.monthlyEMI}</td>
+                                <td>{bill.dueDate}</td>
+                                <td>{bill.totalLoanAmount}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </motion.div>
     );
 }
