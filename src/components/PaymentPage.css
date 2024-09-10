@@ -21,25 +21,29 @@
 }
 
 .card {
-    max-width: 10rem;
-    height: 250px; /* Set a fixed height for all cards */
+    width: 12rem; /* Set a fixed width for all cards */
+    height: 200px; /* Set a fixed height for all cards */
     display: flex; /* Use flex to center content */
     flex-direction: column; /* Align items vertically */
-    justify-content: space-between; /* Space out card body */
+    justify-content: space-around; /* Space out card body */
     margin-bottom: 20px; /* Space between rows of cards */
     margin-top: 50px;
+    overflow: hidden; /* Ensure content stays within the card bounds */
+    cursor: pointer;
 }
 
 .card-img-top {
-    max-height: 100px; /* Limit the height of images */
-    object-fit: cover; /* Ensure images cover the area */
+    width: 100%; /* Force the image to take up the full width of the card */
+    height: 120px; /* Fixed height for all images */
+    object-fit: contain; /* Ensure images fit within the area without being cropped */
 }
+
 
 .payment-section {
     flex: 1; /* Allows the payment section to take up available space */
     display: flex;
     flex-wrap: wrap;
-    gap: 100px; /* Adds spacing between bank icons/cards */
+    gap: 0px; /* Adds spacing between bank icons/cards */
     justify-content: space-around; /* Center the cards within the section */
 }
 

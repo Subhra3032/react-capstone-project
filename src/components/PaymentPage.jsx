@@ -10,6 +10,7 @@ const PaymentPage = () => {
 
   const handleNetBankingClick = () => setSelectedPaymentMethod("netBanking");
   const handleCreditCardClick = () => setSelectedPaymentMethod("creditCard");
+  const handleDebitCardClick = () => setSelectedPaymentMethod("debitCard");
 
   return (
     <motion.div
@@ -40,7 +41,10 @@ const PaymentPage = () => {
             >
               Credit card
             </button>
-            <button className="list-group-item list-group-item-action">
+            <button className={`list-group-item list-group-item-action ${
+                selectedPaymentMethod === "debitCard" ? "active" : ""
+              }`}
+              onClick={handleDebitCardClick}>
               Debit card
             </button>
           </div>
@@ -144,7 +148,7 @@ const PaymentPage = () => {
             </div>
           )}
 
-          {selectedPaymentMethod === "creditCard" && (
+          {(selectedPaymentMethod === "creditCard" || selectedPaymentMethod === "debitCard") && (
             <div>
               <h3>Pay with card</h3>
               <form>
@@ -198,9 +202,9 @@ const PaymentPage = () => {
               </form>
             </div>
           )}
+          
         </div>
       </div>
-      <BackButton />
     </motion.div>
   );
 };

@@ -9,6 +9,8 @@ import BillsOverview from "./components/BillsOverview";
 import OverdueUpcoming from "./components/OverdueUpcoming";
 import PaymentPage from "./components/PaymentPage";
 import "bootstrap/dist/css/bootstrap.css";
+import OverdueBill from "./components/OverdueBill";
+import UpcomingBill from "./components/UpcomingBill";
 function App() {
   return (
     <Router>
@@ -27,7 +29,15 @@ function App() {
               element={<OverdueUpcoming />}
             />
             <Route
-              path="/manageBills/upcoming/payment"
+              path="/manageBills/overdue"
+              element={<OverdueBill/>}
+            />
+            <Route
+              path="/manageBills/upcoming"
+              element={<UpcomingBill/>}
+            />
+            <Route
+              path="/manageBills/payment"
               element={<PaymentPage />}
             />
           </Routes>

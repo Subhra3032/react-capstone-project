@@ -22,7 +22,7 @@ const OverdueUpcoming = () => {
       <div className="info-card-container">
         <InfoCard
           icon={faClipboardList}
-          text="Over due bills"
+          text="Overdue bills"
           to="/manageBills/overdue"
         />
 
@@ -32,7 +32,6 @@ const OverdueUpcoming = () => {
           to="/manageBills/upcoming"
         />
       </div>
-      <BackButton />
     </motion.div>
   );
 };

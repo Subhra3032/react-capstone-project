@@ -5,7 +5,7 @@ const BackButton = () => {
   return (
     <div className="back-button">
       <Link to="/manageBills" className="link-wrapper">
-        <button type="button" className="btn btn-secondary">
+        <button type="button" className="btn btn-dark">
           Manage Bills
         </button>
       </Link>
