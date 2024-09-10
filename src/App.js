@@ -11,6 +11,8 @@ import PaymentPage from "./components/PaymentPage";
 import "bootstrap/dist/css/bootstrap.css";
 import OverdueBill from "./components/OverdueBill";
 import UpcomingBill from "./components/UpcomingBill";
+import BillsOverviewDetails from './components/BillsOverviewDetails';
+import BillDetailsPage from './components/BillDetailsPage';
 
 function App() {
   return (
@@ -38,6 +40,8 @@ function App() {
               path="/manageBills/payment"
               element={<PaymentPage />}
             />
+            <Route path='/manageBills/billsOverview/allDetails' element={<BillsOverviewDetails />} />
+            <Route path='/manageBills/billsOverview/:category' element={<BillDetailsPage />} />
           </Routes>
         </div>
       </AnimatePresence>

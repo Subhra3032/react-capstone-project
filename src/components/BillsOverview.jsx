@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './BillsOverview.css';
 import Header from './Header';
 import { motion } from 'framer-motion';
@@ -6,9 +6,53 @@ import InfoCard from './InfoCard';
 import { faListCheck } from '@fortawesome/free-solid-svg-icons';
 import Dropdown from './Dropdown';
 import DatePicker from './DatePicker';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function BillsOverview() {
+
+    const [category, setCategory] = useState('All');
+    const navigate = useNavigate();
+
+    const handleSubmit = () => {
+        let path;
+        
+        switch(category) {
+            case 'House Rent':
+                path = '/manageBills/billsOverview/houseRent';
+                break;
+
+            case 'Debt Payments':
+                path = '/manageBills/billsOverview/debtPayments';
+                break;
+
+            case 'Credit Card Bills':
+                path = '/manageBills/billsOverview/creditCardBills';
+                break;
+
+            case 'Utilities':
+                path = '/manageBills/billsOverview/utilities';
+                break;
+
+            case 'Electricity':
+                path = '/manageBills/billsOverview/electricity';
+                break;
+
+            case 'Internet':
+                path = '/manageBills/billsOverview/internet';
+                break;
+
+            case 'All':
+                path = '/manageBills/billsOverview/allDetails';
+                break;
+
+            default:
+                path = '/manageBills/billsOverview'; // Default path if none match
+                break;
+        }
+
+        navigate(path);
+    }
+
     return (
         <motion.div
             initial={{ opacity: 0, scale: 0.5 }}
@@ -24,7 +68,8 @@ function BillsOverview() {
                     <label htmlFor='bill-category'>Bill Category</label>
                     <Dropdown
                         id='bill-category'
-                        options={['Electricity', 'Water', 'Internet', 'Rent']}
+                        options={['All', 'House Rent', 'Debt Payments', 'Credit Card Bills', 'Utilities', 'Electricity', 'Internet']}
+                        onChange={(e) => setCategory(e.target.value)}
                     />
                 </div>
                 <div className='form-group'>
@@ -43,7 +88,7 @@ function BillsOverview() {
                     />
                 </div>
             </div>
-            <button className='submit-button'>Submit</button>
+            <button className='submit-button' onClick={handleSubmit}>Submit</button>
         </motion.div>
     );
 }
