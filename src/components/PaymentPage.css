@@ -60,5 +60,5 @@ h2 {
 
 /* Additional spacing for date input fields */
 input[type="text"], input[type="email"] {
-    margin-bottom: 15px; /* Additional spacing */
+    /* margin-bottom: 15px; Additional spacing */
 }

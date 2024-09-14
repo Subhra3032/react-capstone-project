@@ -16,6 +16,12 @@
     padding: 0;
     margin: 0;
 }
+.back-button{
+    display: flex;
+    justify-content: center;
+    margin-left: 20px;
+    margin-top: 20px;
+}
 
 
   

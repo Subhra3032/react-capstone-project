@@ -2,14 +2,13 @@ import React, { useState } from "react";
 import "./PaymentPage.css";
 import Header from "./Header";
 import { motion } from "framer-motion";
-import BackButton from "./BackButton";
 
 const PaymentPage = () => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] =
     useState("netBanking");
 
   const handleNetBankingClick = () => setSelectedPaymentMethod("netBanking");
-  const handleCreditCardClick = () => setSelectedPaymentMethod("creditCard");
+  const handleCreditCardClick = () => setSelectedPaymentMethod("creditCard ");
   const handleDebitCardClick = () => setSelectedPaymentMethod("debitCard");
 
   return (
@@ -166,6 +165,7 @@ const PaymentPage = () => {
                     type="text"
                     className="form-control"
                     placeholder="1234 1234 1234 1234"
+                    style={{marginBottom: "10px"}}
                   />
                   <div className="row">
                     <div className="col">
