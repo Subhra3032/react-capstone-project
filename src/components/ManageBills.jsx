@@ -27,7 +27,10 @@ function ManageBills() {
         />
         <Feature text="Reminder Settings" />
         <Feature text="Bills Overview" to="/manageBills/billsOverview" />
-        <Feature text="Snooze or Mark Paid Bills" />
+        <Feature
+          text="Snooze or Mark Paid Bills"
+          to="/manageBills/snoozeOrMarkBillsPaid"
+        />
       </div>
     </motion.div>
   );

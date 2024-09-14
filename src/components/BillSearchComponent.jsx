@@ -1,12 +1,23 @@
+import { useState } from "react";
+import "./BillSearchComponent.css";
 
-import './BillSearchComponent.css';
+const BillSearchComponent = ({ onSearch }) => {
+  const [billName, setBillName] = useState("");
 
-const BillSearchComponent = (props) => {
+  const handleSearchChange = (event) => {
+    setBillName(event.target.value);
+    onSearch(event.target.value); // Call the function passed from the parent to update the search term
+  };
+
   return (
     <div className="search-component">
-     <div className="filter">
+      <div className="filter">
         <label htmlFor="bill-category">Bill Category:</label>
-        <select id="bill-category" name="bill-category" className="custom-dropdown">
+        <select
+          id="bill-category"
+          name="bill-category"
+          className="custom-dropdown"
+        >
           <option value="House Rent">House Rent</option>
           <option value="Debt Payments">Debt Payments</option>
           <option value="Groceries">Groceries</option>
@@ -16,7 +27,14 @@ const BillSearchComponent = (props) => {
       </div>
       <div className="filter">
         <label htmlFor="bill-name">Bill Name:</label>
-        <input type="text" id="bill-name" name="bill-name" className="custom-input" />
+        <input
+          type="text"
+          id="bill-name"
+          name="bill-name"
+          className="custom-input"
+          value={billName}
+          onChange={handleSearchChange} // Handle input changes
+        />
       </div>
     </div>
   );
