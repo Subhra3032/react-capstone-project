@@ -57,11 +57,18 @@ const SnoozeOrMarkBillsPaid = () => {
       });
   }, []);
 
+  // const handleCheckboxChange = (billName) => {
+  //   setSelectedBills((prevSelectedBills) =>
+  //     prevSelectedBills.includes(billName)
+  //       ? prevSelectedBills.filter((bill) => bill !== billName)
+  //       : [...prevSelectedBills, billName]
+  //   );
+
+  // };
   const handleCheckboxChange = (billName) => {
-    setSelectedBills((prevSelectedBills) =>
-      prevSelectedBills.includes(billName)
-        ? prevSelectedBills.filter((bill) => bill !== billName)
-        : [...prevSelectedBills, billName]
+    setSelectedBills(
+      (prevSelectedBills) =>
+        prevSelectedBills.includes(billName) ? [] : [billName] // Update selection logic to allow only one checked bill
     );
   };
 
