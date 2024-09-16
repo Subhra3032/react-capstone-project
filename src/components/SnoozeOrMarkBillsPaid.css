@@ -42,11 +42,14 @@
   .action-buttons {
     display: flex;
     justify-content: space-between;
-    margin: 30px 0;
+    margin-top: 30px;
     justify-content: center;
   }
   .action-buttons .btn-success {
-    margin-left: 30px; /* Add left margin to create space between the buttons */
+    margin-left: 30px; 
+}
+.menu-buttons {
+  margin-top: -10px; 
 }
 .btn-success {
   white-space: nowrap;
@@ -66,11 +69,7 @@
   .menu-buttons {
     display: flex;
     justify-content: center;
-    margin: 100px 0;
-  }
-  
-  .menu-buttons .btn {
-    margin: 0 20px;
+    margin: 50px 0;
   }
   
   .sort-btn-container {
@@ -78,4 +77,26 @@
     justify-content: center;
     margin-top: 20px;
   }
-  
+  .date-picker {
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    font-size: 1rem;
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.pagination button {
+  margin: 0 10px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.pagination span {
+  font-weight: bold;
+}

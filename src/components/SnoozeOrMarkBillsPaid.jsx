@@ -1,44 +1,61 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import "./SnoozeOrMarkBillsPaid.css";
 import SnoozeHelper from "./SnoozeHelper";
 import Header from "./Header";
-import DatePicker from "./DatePicker"; // Import your custom DatePicker
 
 const SnoozeOrMarkBillsPaid = () => {
   const [selectedBills, setSelectedBills] = useState([]);
   const [snoozeDate, setSnoozeDate] = useState(new Date());
   const [searchTerm, setSearchTerm] = useState(""); // State to hold the search term
-  const [dummyData, setDummyData] = useState([
-    {
-      billName: "Electricity Bill",
-      amountDue: "$100",
-      totalAmount: "$500",
-      dueDate: "2023-10-01",
-      overdueBy: "5 days",
-      paymentStatus: "Pending",
-      category: "Utilities",
-    },
-    {
-      billName: "Water Bill",
-      amountDue: "$200",
-      totalAmount: "$600",
-      dueDate: "2023-10-05",
-      overdueBy: "2 days",
-      paymentStatus: "Pending",
-      category: "Utilities",
-    },
-    {
-      billName: "Internet Bill",
-      amountDue: "$150",
-      totalAmount: "$450",
-      dueDate: "2023-10-03",
-      overdueBy: "4 days",
-      paymentStatus: "Paid",
-      category: "Entertainment",
-    },
-  ]);
+  const [billsData, setBillsData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1); // State for current page
+  const billsPerPage = 4; // Number of bills to display per page
+
+  // Fetching data using fetch instead of axios
+  useEffect(() => {
+    fetch("http://localhost:8085/bill/all")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        const today = new Date();
+
+        // Calculate overdue days for each bill
+        const updatedData = data.map((bill) => {
+          if (bill.paymentStatus.toLowerCase() === "paid") {
+            return {
+              ...bill,
+              overdueBy: "0 days",
+              amountDue: bill.amount, // Assuming 'amount' is the amount due
+              totalAmount: bill.amount, // If the bill is paid, set overdueBy to "0 days"
+            };
+          } else {
+            const dueDate = new Date(bill.dueDate);
+            const timeDifference = today - dueDate; // difference in milliseconds
+            const overdueDays = Math.floor(
+              timeDifference / (1000 * 60 * 60 * 24)
+            ); // convert to days
+            return {
+              ...bill,
+              overdueBy: overdueDays > 0 ? `${overdueDays} days` : "0 days",
+              amountDue: bill.amount, // Assuming 'amount' is the amount due
+              totalAmount: bill.amount, // update the overdueBy field
+            };
+          }
+        });
+
+        setBillsData(updatedData);
+        console.log("Received and updated data:", updatedData[0]);
+      })
+      .catch((error) => {
+        console.error("Error fetching bills:", error);
+      });
+  }, []);
 
   const handleCheckboxChange = (billName) => {
     setSelectedBills((prevSelectedBills) =>
@@ -50,42 +67,120 @@ const SnoozeOrMarkBillsPaid = () => {
 
   const handleSnooze = () => {
     if (selectedBills.length > 0) {
-      const updatedData = dummyData.map((bill) => {
-        if (
-          selectedBills.includes(bill.billName) &&
-          bill.paymentStatus !== "Paid"
-        ) {
-          return {
-            ...bill,
-            dueDate: snoozeDate.toISOString().split("T")[0],
-            overdueBy: "0 days",
-          };
-        }
-        return bill;
-      });
+      const billToSnooze = billsData.find(
+        (bill) =>
+          selectedBills.includes(bill.billName) && bill.paymentStatus !== "paid"
+      );
 
-      setDummyData(updatedData);
-      setSelectedBills([]);
-      alert("Bill successfully snoozed until " + snoozeDate.toDateString());
+      if (billToSnooze) {
+        const billData = {
+          billId: billToSnooze.billId,
+          billName: billToSnooze.billName,
+          billCategory: billToSnooze.billCategory,
+          dueDate: snoozeDate.toISOString().split("T")[0],
+          amount: billToSnooze.amount,
+          reminderFrequency: billToSnooze.reminderFrequency,
+          attachment: billToSnooze.attachment,
+          notes: billToSnooze.notes,
+          isRecurring: billToSnooze.isRecurring,
+          paymentStatus: billToSnooze.paymentStatus,
+        };
+
+        fetch(
+          `http://localhost:8085/bill/snooze?newDate=${
+            snoozeDate.toISOString().split("T")[0]
+          }`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(billData),
+          }
+        )
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            const updatedData = billsData.map((bill) => {
+              if (bill.billId === billToSnooze.billId) {
+                return {
+                  ...bill,
+                  dueDate: snoozeDate.toISOString().split("T")[0],
+                  overdueBy: "0 days",
+                };
+              }
+              return bill;
+            });
+            setBillsData(updatedData);
+            setSelectedBills([]);
+            alert(
+              "Bill successfully snoozed until " + snoozeDate.toDateString()
+            );
+          })
+          .catch((error) => {
+            console.error("Error snoozing bill:", error);
+            alert("There was an error snoozing the bill.");
+          });
+      }
     } else {
       alert("Please select a bill to snooze.");
     }
   };
 
   const handleMarkPaid = () => {
-    if (selectedBills.length > 0) {
-      const updatedData = dummyData.map((bill) => {
-        if (selectedBills.includes(bill.billName)) {
-          return { ...bill, paymentStatus: "Paid", overdueBy: "0 days" };
-        }
-        return bill;
-      });
+    if (selectedBills.length === 1) {
+      const billToUpdate = billsData.find((bill) =>
+        selectedBills.includes(bill.billName)
+      );
 
-      setDummyData(updatedData);
-      setSelectedBills([]);
-      alert("Bill(s) marked as paid!");
+      const billPayload = {
+        billId: billToUpdate.billId,
+        billName: billToUpdate.billName,
+        billCategory: billToUpdate.billCategory,
+        dueDate: billToUpdate.dueDate,
+        amount: billToUpdate.amount,
+        reminderFrequency: billToUpdate.reminderFrequency,
+        attachment: billToUpdate.attachment,
+        notes: billToUpdate.notes,
+        isRecurring: billToUpdate.isRecurring,
+        paymentStatus: "paid",
+      };
+
+      fetch("http://localhost:8085/bill/markAsPaid", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(billPayload),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          const updatedData = billsData.map((bill) => {
+            if (bill.billId === billToUpdate.billId) {
+              return { ...bill, paymentStatus: "paid", overdueBy: "0 days" };
+            }
+            return bill;
+          });
+          console.log("Payload to send:", JSON.stringify(billPayload));
+          setBillsData(updatedData);
+          setSelectedBills([]);
+          alert("Bill marked as paid!");
+        })
+        .catch((error) => {
+          console.error("Error marking bill as paid:", error);
+          alert("There was an error marking the bill as paid.");
+        });
     } else {
-      alert("Please select a bill to mark as paid.");
+      alert("Please select exactly one bill to mark as paid.");
     }
   };
 
@@ -93,9 +188,17 @@ const SnoozeOrMarkBillsPaid = () => {
     setSearchTerm(term); // Update the search term
   };
 
-  const filteredData = dummyData.filter((bill) =>
+  const filteredData = billsData.filter((bill) =>
     bill.billName.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  // Pagination logic
+  const indexOfLastBill = currentPage * billsPerPage; // Get index of last bill on current page
+  const indexOfFirstBill = indexOfLastBill - billsPerPage; // Get index of first bill on current page
+  const currentBills = filteredData.slice(indexOfFirstBill, indexOfLastBill); // Bills for current page
+
+  // Calculate total pages
+  const totalPages = Math.ceil(filteredData.length / billsPerPage);
 
   return (
     <motion.div
@@ -115,16 +218,16 @@ const SnoozeOrMarkBillsPaid = () => {
             <tr>
               <th></th>
               <th>Bill Name</th>
-              <th>Amount Due</th>
-              <th>Total Amount</th>
+              <th>Amount Due in Rs</th>
+              <th>Total Amount in Rs</th>
               <th>Due Date</th>
               <th>Overdue By</th>
               <th>Payment Status</th>
             </tr>
           </thead>
           <tbody>
-            {filteredData.length > 0 ? (
-              filteredData.map((data, index) => (
+            {currentBills.length > 0 ? (
+              currentBills.map((data, index) => (
                 <tr key={index}>
                   <td>
                     <input
@@ -143,21 +246,54 @@ const SnoozeOrMarkBillsPaid = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="7" style={{ textAlign: "center" }}>
-                  Bill not found
-                </td>
+                <td colSpan="7">No bills found</td>
               </tr>
             )}
           </tbody>
         </table>
       </div>
 
+      <div className="pagination">
+        <button
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+        >
+          Previous
+        </button>
+        <span>
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={() =>
+            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+          }
+          disabled={currentPage === totalPages}
+        >
+          Next
+        </button>
+      </div>
+
+      {/* <div className="button-container">
+        <Link to="/dashboard">
+          <button className="back-button">Back to Dashboard</button>
+        </Link>
+        <button onClick={handleMarkPaid}>Mark as Paid</button>
+        <DatePicker selectedDate={snoozeDate} onChange={setSnoozeDate} />
+        <button onClick={handleSnooze}>Snooze</button>
+      </div> */}
+
       <div className="action-buttons">
         <div>
           <label>Snooze Until:</label>
-          <DatePicker
+          {/* <DatePicker
             id="snooze-date"
             onChange={(date) => setSnoozeDate(date)} // Update based on the format of your custom DatePicker
+          /> */}
+          <input
+            type="date"
+            id="snooze-date"
+            className="date-picker"
+            onChange={(e) => setSnoozeDate(new Date(e.target.value))} // Update state with the selected date
           />
           <button onClick={handleSnooze} className="btn btn-warning">
             Snooze
