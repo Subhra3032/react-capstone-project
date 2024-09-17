@@ -17,10 +17,11 @@
     gap: 20px;
 }
 
-h2 {
-    margin: 40px 0;
+.bills-overview h2 {
+    margin: 20px 0;
     color: purple;
     font-style: italic;
+    font-weight: bold;
 }
 
 .form-group {

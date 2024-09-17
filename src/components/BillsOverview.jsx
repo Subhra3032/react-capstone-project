@@ -11,38 +11,45 @@ import { Link, useNavigate } from 'react-router-dom';
 function BillsOverview() {
 
     const [category, setCategory] = useState('All');
+    const [fromDate, setFromDate] = useState('2024-01-01'); // Default values, update as needed
+    const [toDate, setToDate] = useState('2024-12-31');     // Default values, update as needed
+    const [status, setStatus] = useState('Paid');           // Default status
     const navigate = useNavigate();
 
     const handleSubmit = () => {
         let path;
         
         switch(category) {
-            case 'House Rent':
-                path = '/manageBills/billsOverview/houseRent';
+            case 'Services':
+                path = '/manageBills/billsOverview/services';
                 break;
 
-            case 'Debt Payments':
-                path = '/manageBills/billsOverview/debtPayments';
+            case 'Rent':
+                path = '/manageBills/billsOverview/rent';
                 break;
 
-            case 'Credit Card Bills':
-                path = '/manageBills/billsOverview/creditCardBills';
+            case 'Loan':
+                path = '/manageBills/billsOverview/loan';
                 break;
 
             case 'Utilities':
                 path = '/manageBills/billsOverview/utilities';
                 break;
 
-            case 'Electricity':
-                path = '/manageBills/billsOverview/electricity';
+            case 'Credit Card':
+                path = '/manageBills/billsOverview/creditCard';
                 break;
 
-            case 'Internet':
-                path = '/manageBills/billsOverview/internet';
+            case 'Subscriptions':
+                path = '/manageBills/billsOverview/subscriptions';
                 break;
 
-            case 'All':
-                path = '/manageBills/billsOverview/allDetails';
+            case 'Insurance':
+                path= '/manageBills/billsOverview/insurance';
+                break;
+
+            case 'Others':
+                path= '/manageBills/billsOverview/others';
                 break;
 
             default:
@@ -50,7 +57,14 @@ function BillsOverview() {
                 break;
         }
 
-        navigate(path);
+        navigate(path, {
+            state: {
+                category,
+                fromDate,
+                toDate,
+                status
+            }
+        });
     }
 
     return (
@@ -68,23 +82,24 @@ function BillsOverview() {
                     <label htmlFor='bill-category'>Bill Category</label>
                     <Dropdown
                         id='bill-category'
-                        options={['All', 'House Rent', 'Debt Payments', 'Credit Card Bills', 'Utilities', 'Electricity', 'Internet']}
+                        options={['Services', 'Rent', 'Loan', 'Utilities', 'Credit Card', 'Subscriptions', 'Insurance', 'Others']}
                         onChange={(e) => setCategory(e.target.value)}
                     />
                 </div>
                 <div className='form-group'>
                     <label htmlFor='bill-date-from'>Bill Date From</label>
-                    <DatePicker id='bill-date-from' />
+                    <DatePicker id='bill-date-from' onChange={(date) => setFromDate(date)} />
                 </div>
                 <div className='form-group'>
                     <label htmlFor='bill-date-to'>Bill Date To</label>
-                    <DatePicker id='bill-date-to' />
+                    <DatePicker id='bill-date-to' onChange={(date) => setToDate(date)} />
                 </div>
                 <div className='form-group'>
                     <label htmlFor='bill-status'>Bill Status</label>
                     <Dropdown
                         id='bill-status'
-                        options={['Paid', 'Pending', 'Overdue']}
+                        options={['Paid', 'Upcoming', 'Unpaid']}
+                        onChange={(e) => setStatus(e.target.value)}
                     />
                 </div>
             </div>

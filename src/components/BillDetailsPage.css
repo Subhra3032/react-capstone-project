@@ -11,7 +11,9 @@
 
 .bill-details-page h2 {
     margin: 20px 0;
-    font-size: 1.5rem;
+    font-style: italic;
+    color: purple;
+    font-weight: bold;
 }
 
 .bills-table-container {
