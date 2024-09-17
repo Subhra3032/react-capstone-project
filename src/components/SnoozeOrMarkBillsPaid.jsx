@@ -9,6 +9,7 @@ const SnoozeOrMarkBillsPaid = () => {
   const [selectedBills, setSelectedBills] = useState([]);
   const [snoozeDate, setSnoozeDate] = useState(new Date());
   const [searchTerm, setSearchTerm] = useState(""); // State to hold the search term
+  const [selectedCategory, setSelectedCategory] = useState("All");
   const [billsData, setBillsData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1); // State for current page
   const billsPerPage = 4; // Number of bills to display per page
@@ -57,14 +58,6 @@ const SnoozeOrMarkBillsPaid = () => {
       });
   }, []);
 
-  // const handleCheckboxChange = (billName) => {
-  //   setSelectedBills((prevSelectedBills) =>
-  //     prevSelectedBills.includes(billName)
-  //       ? prevSelectedBills.filter((bill) => bill !== billName)
-  //       : [...prevSelectedBills, billName]
-  //   );
-
-  // };
   const handleCheckboxChange = (billName) => {
     setSelectedBills(
       (prevSelectedBills) =>
@@ -195,9 +188,23 @@ const SnoozeOrMarkBillsPaid = () => {
     setSearchTerm(term); // Update the search term
   };
 
-  const filteredData = billsData.filter((bill) =>
-    bill.billName.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // const filteredData = billsData.filter((bill) =>
+  //   bill.billName.toLowerCase().includes(searchTerm.toLowerCase())
+  // );
+
+  const handleCategoryChange = (category) => {
+    setSelectedCategory(category);
+  };
+
+  // Filter bills based on both search term and category
+  const filteredData = billsData.filter((bill) => {
+    const matchesSearchTerm = bill.billName
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    const matchesCategory =
+      selectedCategory === "All" || bill.billCategory === selectedCategory;
+    return matchesSearchTerm && matchesCategory;
+  });
 
   // Pagination logic
   const indexOfLastBill = currentPage * billsPerPage; // Get index of last bill on current page
@@ -216,7 +223,10 @@ const SnoozeOrMarkBillsPaid = () => {
     >
       <Header />
       <div>
-        <SnoozeHelper onSearch={handleSearch} />
+        <SnoozeHelper
+          onSearch={handleSearch}
+          onCategoryChange={handleCategoryChange}
+        />
       </div>
 
       <div className="table-container">
@@ -280,22 +290,9 @@ const SnoozeOrMarkBillsPaid = () => {
         </button>
       </div>
 
-      {/* <div className="button-container">
-        <Link to="/dashboard">
-          <button className="back-button">Back to Dashboard</button>
-        </Link>
-        <button onClick={handleMarkPaid}>Mark as Paid</button>
-        <DatePicker selectedDate={snoozeDate} onChange={setSnoozeDate} />
-        <button onClick={handleSnooze}>Snooze</button>
-      </div> */}
-
       <div className="action-buttons">
         <div>
           <label>Snooze Until:</label>
-          {/* <DatePicker
-            id="snooze-date"
-            onChange={(date) => setSnoozeDate(date)} // Update based on the format of your custom DatePicker
-          /> */}
           <input
             type="date"
             id="snooze-date"

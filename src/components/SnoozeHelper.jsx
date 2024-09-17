@@ -1,12 +1,18 @@
 import { useState } from "react";
 import "./SnoozeHelper.css";
 
-const SnoozeHelper = ({ onSearch }) => {
+const SnoozeHelper = ({ onSearch, onCategoryChange }) => {
   const [billName, setBillName] = useState("");
+  const [category, setCategory] = useState("All");
 
   const handleSearchChange = (event) => {
     setBillName(event.target.value);
-    onSearch(event.target.value); // Call the function passed from the parent to update the search term
+    onSearch(event.target.value); // Pass search term to parent
+  };
+
+  const handleCategoryChange = (event) => {
+    setCategory(event.target.value);
+    onCategoryChange(event.target.value); // Pass category to parent
   };
 
   return (
@@ -17,12 +23,14 @@ const SnoozeHelper = ({ onSearch }) => {
           id="bill-category"
           name="bill-category"
           className="custom-dropdown"
+          value={category}
+          onChange={handleCategoryChange} // Handle category change
         >
-          <option value="House Rent">House Rent</option>
-          <option value="Debt Payments">Debt Payments</option>
-          <option value="Groceries">Groceries</option>
-          <option value="Internet Charges">Internet Charges</option>
-          <option value="Cellphone Charges">Cellphone Charges</option>
+          <option value="Utilities">Utilities</option>
+          <option value="Subscription">Subscription</option>
+          <option value="Rent">Rent</option>
+          <option value="Others">Others</option>
+          <option value="All">All</option> {/* Default option */}
         </select>
       </div>
       <div className="filter">
