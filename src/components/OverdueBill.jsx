@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import "./OverdueBill.css";
@@ -6,42 +6,24 @@ import BillSearchComponent from "./BillSearchComponent";
 import Header from "./Header";
 
 const OverdueBill = () => {
-  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [list, setList] = useState([]);
 
-  const dummyData = [
-    {
-      amountDue: "$100",
-      totalAmount: "$500",
-      dueDate: "2023-10-01",
-      overdueBy: "5 days",
-      paymentStatus: "Pending",
-      category: "Category 1",
-    },
-    {
-      amountDue: "$200",
-      totalAmount: "$600",
-      dueDate: "2023-10-05",
-      overdueBy: "2 days",
-      paymentStatus: "Pending",
-      category: "Category 2",
-    },
-    {
-      amountDue: "$150",
-      totalAmount: "$450",
-      dueDate: "2023-10-03",
-      overdueBy: "4 days",
-      paymentStatus: "Paid",
-      category: "Category 3",
-    },
-  ];
-
-  const handleCheckboxChange = (category) => {
-    setSelectedCategories((prevSelectedCategories) =>
-      prevSelectedCategories.includes(category)
-        ? prevSelectedCategories.filter((c) => c !== category)
-        : [...prevSelectedCategories, category]
-    );
-  };
+  const handleListChange=(list)=>{
+    setList(list);
+  }
+  
+  useEffect(() => {
+    try {
+      fetch("http://localhost:8085/bill/overdue").then((response) => {
+        return response.json();
+      }).then((data) => {
+        setList(data);
+      });
+    }
+    catch (error) {
+      console.log(error);
+    }
+},[])
 
   return (
     <motion.div
@@ -52,7 +34,7 @@ const OverdueBill = () => {
     >
       <Header />
       <div>
-        <BillSearchComponent />
+        <BillSearchComponent handleListChange={handleListChange} list={list} />
       </div>
 
       <div className="table-container">
@@ -68,19 +50,19 @@ const OverdueBill = () => {
             </tr>
           </thead>
           <tbody>
-            {dummyData.map((data, index) => (
+            {list.map((data, index) => (
               <tr key={index}>
                 <td>
                   <input
                     type="checkbox"
-                    checked={selectedCategories.includes(data.category)}
-                    onChange={() => handleCheckboxChange(data.category)}
+                    // checked={selectedCategories.includes(data.category)}
+                    // onChange={() => handleCheckboxChange(data.category)}
                   />
                 </td>
-                <td>{data.amountDue}</td>
-                <td>{data.totalAmount}</td>
+                <td>{data.amount}</td>
+                <td>{data.amount}</td>
                 <td>{data.dueDate}</td>
-                <td>{data.overdueBy}</td>
+                <td>{Math.floor((new Date() - new Date(data.dueDate)) / (1000 * 60 * 60 * 24))} days</td> 
                 <td>{data.paymentStatus}</td>
               </tr>
             ))}

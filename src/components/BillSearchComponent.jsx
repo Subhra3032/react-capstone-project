@@ -1,19 +1,28 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./BillSearchComponent.css";
 import { faFilter } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Popover from "react-bootstrap/Popover";
 import DatePicker from "react-datepicker"; // Make sure to install react-datepicker
 import "react-datepicker/dist/react-datepicker.css";
 
-const BillSearchComponent = (props) => {
-  const [filter, setFilter] = useState(false);
+const BillSearchComponent = ({handleListChange,list}) => {
+  const [name, setName] = useState('');
   const [selectedDate, setSelectedDate] = useState(null);
+  const [category, setCategory] = useState("all");
 
-  const handleDateChange = (date) => {
+  const handleDate = (date) => {
     setSelectedDate(date);
   };
+
+  const handleCategory = (event) => {
+    setCategory(event.target.value);
+  }
+  const handleName = (event) => {
+    setName(event.target.value);
+  }
+
 
   const popover = (
     <Popover id="popover-basic">
@@ -21,7 +30,7 @@ const BillSearchComponent = (props) => {
       <Popover.Body>
         <DatePicker
           selected={selectedDate}
-          onChange={handleDateChange}
+          onChange={handleDate}
           dateFormat="yyyy/MM/dd"
           isClearable
           inline
@@ -39,12 +48,13 @@ const BillSearchComponent = (props) => {
           id="bill-category"
           name="bill-category"
           className="custom-dropdown"
+          onClick={handleCategory}
         >
-          <option value="House Rent">House Rent</option>
-          <option value="Debt Payments">Debt Payments</option>
-          <option value="Groceries">Groceries</option>
-          <option value="Internet Charges">Internet Charges</option>
-          <option value="Cellphone Charges">Cellphone Charges</option>
+          <option value="utilities">Utilities</option>
+          <option value="subscription">Subscription</option>
+          <option value="rent">Rent</option>
+          <option value="others">Others</option>
+          <option value="all">All</option>
         </select>
       </div>
       <div className="filter">
@@ -54,6 +64,8 @@ const BillSearchComponent = (props) => {
           id="bill-name"
           name="bill-name"
           className="custom-input"
+          value={name}
+          onChange={handleName}
         />
       </div>
       <div
