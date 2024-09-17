@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./UpcomingBill.css";
 import BillSearchComponent from "./BillSearchComponent";
 import Header from "./Header";
+import { loadStripe } from "@stripe/stripe-js";
+
+const stripePromise = loadStripe("pk_test_51NPgG9SIMqwS7WNZEIQb2SSsVkXldQO3jNz2OvXM4YTNKbNTKEhyNIuIPYLD7jIEzDYH1G3hsRkaup8C7IffikUd00LiGt3GRA");
 
 const UpcomingBill = () => {
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -41,6 +44,53 @@ const UpcomingBill = () => {
         ? prevSelectedCategories.filter((c) => c !== category)
         : [...prevSelectedCategories, category]
     );
+  };
+
+  const handlePayNowClick = async () => {
+    const stripe = await stripePromise;
+
+    // Filter the selected bills for payment
+    const selectedBills = dummyData.filter((bill) => (
+      selectedCategories.includes(bill.category)
+    ));
+
+    if(selectedBills.length === 0) {
+      alert("Please select at least one bill to proceed with payment.")
+      return;
+    }
+
+    // Prepare the payload for the backend
+    const paymentDetails = {
+      bills: selectedBills.map((bill) => ({
+        category: bill.category,
+        amountDue: bill.amountDue,
+        totalAmount: bill.totalAmount,
+      })),
+    };
+
+    try {
+      // Call your backend to create a payment intent
+      const response = await fetch("http://localhost:8085/bill/create-checkout-session", {
+        method:"POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(paymentDetails),
+      });
+  
+      const { sessionId } = await response.json();
+  
+      // Use Stripe to redirect to the payment page
+      const result = await stripe.redirectToCheckout({ sessionId });
+  
+      if(result.error) {
+        console.log(result.error.message);
+        alert("Payment failed. Please try again.");
+      }
+    } catch(error) {
+      console.error("Error creating payment:", error);
+      alert("Error occurred while processing payment.");
+    };
   };
 
   return (
@@ -91,7 +141,7 @@ const UpcomingBill = () => {
         <Link to="/manageBills/overdueUpcoming" className="btn btn-primary">
           Back
         </Link>
-        <Link to="/manageBills/payment" className="btn btn-primary">
+        <Link onClick={handlePayNowClick} className="btn btn-primary">
           Pay Now
         </Link>
         <Link to="/manageBills" className="btn btn-primary">

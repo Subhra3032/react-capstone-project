@@ -14,6 +14,8 @@ import UpcomingBill from "./components/UpcomingBill";
 import BillDetailsPage from "./components/BillDetailsPage";
 import SnoozeOrMarkBillsPaid from "./components/SnoozeOrMarkBillsPaid";
 import ReminderSettings from "./components/ReminderSettings";
+import Success from "./components/Success";
+import Failure from "./components/Failure";
 
 function App() {
   return (
@@ -47,6 +49,8 @@ function App() {
               path="/manageBills/reminderSettings"
               element={<ReminderSettings />}
             />
+            <Route path="/bill/success" element={<Success />} />
+            <Route path="/bill/failure" element={<Failure />} />
           </Routes>
         </div>
       </AnimatePresence>

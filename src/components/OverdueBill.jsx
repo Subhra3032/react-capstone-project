@@ -14,7 +14,7 @@ const OverdueBill = () => {
   
   useEffect(() => {
     try {
-      fetch("http://localhost:8085/bill/overdue").then((response) => {
+      fetch("http://localhost:8080/bill/overdue").then((response) => {
         return response.json();
       }).then((data) => {
         setList(data);
