@@ -49,6 +49,7 @@ const BillSearchComponent = ({handleListChange,list}) => {
           name="bill-category"
           className="custom-dropdown"
           onClick={handleCategory}
+          value={category}
         >
           <option value="utilities">Utilities</option>
           <option value="subscription">Subscription</option>
