@@ -19,7 +19,7 @@
 
 .left-side, .right-side {
     flex: 1;
-    padding: 10px;
+    padding: 30px;
 }
 
 .left-side {
@@ -65,12 +65,14 @@ textarea {
 
 .recurring-switch {
     display: flex;
+    flex-direction: row;
     align-items: center;
     margin-bottom: 20px;
 }
 
 .recurring-switch input[type="checkbox"] {
-    margin-right: 10px;
+    margin-left: 10px;
+    font-size: 1.5rem;
 }
 
 .submit-btn {

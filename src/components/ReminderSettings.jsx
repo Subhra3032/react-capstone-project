@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './ReminderSettings.css';
 import { motion } from 'framer-motion';
 import Header from './Header';
@@ -103,7 +103,6 @@ function ReminderSettings() {
                             <div className='form-group recurring-switch'>
                                 <label htmlFor="recurring-bill">Recurring Bill</label>
                                 <input type="checkbox" id="recurring-bill" />
-                                <span>Turn Recurring On/Off</span>
                             </div>
 
                             <button className='submit-btn'>Submit</button>
