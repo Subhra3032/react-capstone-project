@@ -25,7 +25,7 @@ function ManageBills() {
           text="Upcoming/Overdue Bills"
           to="/manageBills/overdueUpcoming"
         />
-        <Feature text="Reminder Settings" />
+        <Feature text="Reminder Settings" to="/manageBills/reminderSettings" />
         <Feature text="Bills Overview" to="/manageBills/billsOverview" />
         <Feature
           text="Snooze or Mark Paid Bills"

@@ -13,6 +13,7 @@ import OverdueBill from "./components/OverdueBill";
 import UpcomingBill from "./components/UpcomingBill";
 import BillDetailsPage from "./components/BillDetailsPage";
 import SnoozeOrMarkBillsPaid from "./components/SnoozeOrMarkBillsPaid";
+import ReminderSettings from "./components/ReminderSettings";
 
 function App() {
   return (
@@ -41,6 +42,10 @@ function App() {
             <Route
               path="/manageBills/billsOverview/:category"
               element={<BillDetailsPage />}
+            />
+            <Route 
+              path="/manageBills/reminderSettings"
+              element={<ReminderSettings />}
             />
           </Routes>
         </div>
