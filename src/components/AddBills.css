@@ -1,29 +1,32 @@
 .add-bills-container {
-    /* max-width: 900px; */
-    margin: 0 auto;
-    padding: 20px;
-    min-height: 100vh; /* Take up full viewport height */
-    min-width: 90vw;
+    display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    /* background-color: #f9f9f9; */
-    /* border-radius: 10px; */
-    /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); */
+    justify-content: flex-start; /* Ensure content starts from the top */
+    align-items: center;
+    min-height: 100vh; /* Take up full viewport height */
+    width: 100vw;
+    padding: 0;
+    margin: 0;
 }
 
 .add-bill-form {
-    text-align: center;
+    min-width: 900px;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
-h2 {
-    font-size: 28px;
-    margin-bottom: 20px;
+.add-bill-heading {
+    color: purple;
+    font-style: italic;
+    font-weight: bold;
+    margin-bottom: 30px;
 }
 
 .form-row {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 15px;
+    margin-bottom: 16px;
 }
 
 .form-row label {
@@ -66,21 +69,97 @@ textarea {
     margin-top: 20px;
 }
 
-.btn {
+.form-actions .button {
     padding: 10px 20px;
+    font-size: 16px;
     border: none;
-    border-radius: 5px;
+    border-radius: 4px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-.save-btn {
-    background-color: #007bff;
+.save-button {
+    background-color: #6200ea;
     color: white;
 }
 
-.cancel-btn {
-    background-color: #6c757d;
+.save-button:hover {
+    background-color: #4b00b2;
+}
+
+.cancel-button {
+    background-color: #f44336;
     color: white;
 }
+
+.cancel-button:hover {
+    background-color: #d32f2f;
+}
+
+.toggle-switch {
+    position: relative;
+    width: 60px;
+    height: 30px;
+    display: inline-block;
+    margin-left: 10px;
+    display: inline-flex;
+    align-items: center;
+    margin-left: 10px; /* Reduce space between label and switch */
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: background-color 0.4s;
+    border-radius: 30px;
+}
+
+.slider:before {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: background-color 0.4s;
+    border-radius: 30px;
+}
+
+input:checked + .slider {
+    background-color: #6200ea;
+}
+
+input:checked + .slider:before {
+    transform: translateX(30px);
+}
+
+.form-row-recurring {
+    display: flex;
+    justify-content: space-between; /* Align items horizontally */
+    align-items: center; /* Vertically align label and toggle switch */
+    margin-top:10px;
+    margin-bottom: 40px; /* Reduce bottom margin between rows */
+    gap: 10px; /* Space between label and input field or toggle switch */
+}
+
+.form-row-recurring label {
+    font-size: 18px;
+    flex: 1; /* Allow label to shrink to fit */
+    margin: 0; /* Remove extra margin */
+}
+
+
 
 

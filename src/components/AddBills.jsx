@@ -109,7 +109,7 @@ function AddBills() {
         >
             <Header />
             <div className="add-bill-form">
-                <h2>Add New Bill</h2>
+                <h2 className='add-bill-heading'>Add New Bill</h2>
                 <form onSubmit={handleSubmit}>
                     <div className="form-row">
                         <label>Bill Name</label>
@@ -191,19 +191,21 @@ function AddBills() {
                             onChange={(e) => setNotes(e.target.value)} 
                         />
                     </div>
-                    <div className="form-row">
+                    <div className="form-row form-row-recurring">
                         <label>Recurring Bill</label>
-                        <input 
-                            type="checkbox" 
-                            id="recurring-toggle"
-                            checked={isRecurring} 
-                            onChange={() => setIsRecurring(!isRecurring)} 
-                        />
-                        <label className="slider" htmlFor="recurring-toggle"></label>
+                        <div className='toggle-switch'>
+                            <input 
+                                type='checkbox'
+                                id='recurring-toggle'
+                                checked={isRecurring} 
+                                onChange={() => setIsRecurring(!isRecurring)} 
+                            />
+                            <label className="slider" htmlFor="recurring-toggle"></label>
+                        </div>
                     </div>
                     <div className="form-actions">
-                        <button type="submit" className="btn save-btn">Save</button>
-                        <button type="button" className="btn cancel-btn" onClick={handleCancel}>Cancel</button>
+                        <button type="button" className="button cancel-button" onClick={handleCancel}>Cancel</button>
+                        <button type="submit" className="button save-button">Save</button>
                     </div>
                 </form>
             </div>
