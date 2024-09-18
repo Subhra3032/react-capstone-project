@@ -1,28 +1,67 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./BillSearchComponent.css";
 import { faFilter } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useState } from "react";
+import { useState,useEffect } from "react";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Popover from "react-bootstrap/Popover";
-import DatePicker from "react-datepicker"; // Make sure to install react-datepicker
+import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-const BillSearchComponent = ({handleListChange,list}) => {
-  const [name, setName] = useState('');
+const BillSearchComponent = ({ handleListChange, originalList }) => {
+  const [name, setName] = useState("");
   const [selectedDate, setSelectedDate] = useState(null);
   const [category, setCategory] = useState("all");
+
+  const handleFilters = () => {
+    let filteredList = originalList;
+
+    // Filter by category
+    if (category !== "all") {
+      filteredList = filteredList.filter(
+        (item) => item.billCategory.toLowerCase() === category
+      );
+    }
+
+    // Filter by name
+    if (name.trim() !== "") {
+      filteredList = filteredList.filter((item) =>
+        item.billName.toLowerCase().includes(name.toLowerCase())
+      );
+    }
+
+    // Filter by date
+    if (selectedDate) {
+      filteredList = filteredList.filter((item) => {
+        const billDueDate = new Date(item.dueDate);
+        return (
+          billDueDate.getFullYear() === selectedDate.getFullYear() &&
+          billDueDate.getMonth() === selectedDate.getMonth() &&
+          billDueDate.getDate() === selectedDate.getDate()
+        );
+      });
+    }
+
+    handleListChange(filteredList); // Call to update the filtered list
+  };
+
+  const handleCategory = (event) => {
+    setCategory(event.target.value);
+    setSelectedDate(null); // Reset date filter when category changes
+  };
+
+  const handleName = (event) => {
+    setName(event.target.value);
+    setSelectedDate(null); // Reset date filter when name changes 
+  };
 
   const handleDate = (date) => {
     setSelectedDate(date);
   };
 
-  const handleCategory = (event) => {
-    setCategory(event.target.value);
-  }
-  const handleName = (event) => {
-    setName(event.target.value);
-  }
-
+  // Call handleFilters whenever any of the filters change
+  useEffect(() => {
+    handleFilters();
+  }, [category, name, selectedDate]);
 
   const popover = (
     <Popover id="popover-basic">
@@ -48,14 +87,14 @@ const BillSearchComponent = ({handleListChange,list}) => {
           id="bill-category"
           name="bill-category"
           className="custom-dropdown"
-          onClick={handleCategory}
+          onChange={handleCategory}
           value={category}
         >
+          <option value="all">All</option>
           <option value="utilities">Utilities</option>
           <option value="subscription">Subscription</option>
           <option value="rent">Rent</option>
           <option value="others">Others</option>
-          <option value="all">All</option>
         </select>
       </div>
       <div className="filter">
@@ -98,5 +137,4 @@ const BillSearchComponent = ({handleListChange,list}) => {
     </div>
   );
 };
-
 export default BillSearchComponent;

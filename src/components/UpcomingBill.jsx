@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "./UpcomingBill.css";
 import BillSearchComponent from "./BillSearchComponent";
 import Header from "./Header";
@@ -9,88 +9,68 @@ import { loadStripe } from "@stripe/stripe-js";
 const stripePromise = loadStripe("pk_test_51NPgG9SIMqwS7WNZEIQb2SSsVkXldQO3jNz2OvXM4YTNKbNTKEhyNIuIPYLD7jIEzDYH1G3hsRkaup8C7IffikUd00LiGt3GRA");
 
 const UpcomingBill = () => {
-  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [list, setList] = useState([]);
+  const [selectedBillIds, setSelectedBillIds] = useState([]); // Track selected bill IDs
+  const [originalList, setOriginalList] = useState([]);
 
-  const dummyData = [
-    {
-      amountDue: "$100",
-      totalAmount: "$500",
-      dueDate: "2023-10-01",
-      dueIn: "5 days",
-      paymentStatus: "Pending",
-      category: "Category 1",
-    },
-    {
-      amountDue: "$200",
-      totalAmount: "$600",
-      dueDate: "2023-10-05",
-      dueIn: "2 days",
-      paymentStatus: "Pending",
-      category: "Category 2",
-    },
-    {
-      amountDue: "$150",
-      totalAmount: "$450",
-      dueDate: "2023-10-03",
-      dueIn: "4 days",
-      paymentStatus: "Paid",
-      category: "Category 3",
-    },
-  ];
+  useEffect(() => {
+    fetch("http://localhost:8080/bill/upcoming?userId=user456")
+      .then((response) => response.json())
+      .then((data) => {
+        setList(data);
+        setOriginalList(data); // Store original data for searching
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+  }, []);
 
-  const handleCheckboxChange = (category) => {
-    setSelectedCategories((prevSelectedCategories) =>
-      prevSelectedCategories.includes(category)
-        ? prevSelectedCategories.filter((c) => c !== category)
-        : [...prevSelectedCategories, category]
+  // Toggle bill selection based on its ID
+  const handleCheckboxChange = (billId) => {
+    setSelectedBillIds((prevSelectedBillIds) =>
+      prevSelectedBillIds.includes(billId)
+        ? prevSelectedBillIds.filter((id) => id !== billId)
+        : [...prevSelectedBillIds, billId]
     );
   };
 
   const handlePayNowClick = async () => {
     const stripe = await stripePromise;
+    const selectedBills = list.filter((bill) =>
+      selectedBillIds.includes(bill.billId) // Filter by bill IDs now
+    );
 
-    // Filter the selected bills for payment
-    const selectedBills = dummyData.filter((bill) => (
-      selectedCategories.includes(bill.category)
-    ));
-
-    if(selectedBills.length === 0) {
-      alert("Please select at least one bill to proceed with payment.")
+    if (selectedBills.length === 0) {
+      alert("Please select at least one bill to proceed with payment.");
       return;
     }
 
-    // Prepare the payload for the backend
     const paymentDetails = {
       bills: selectedBills.map((bill) => ({
-        category: bill.category,
-        amountDue: bill.amountDue,
-        totalAmount: bill.totalAmount,
+        category: bill.billCategory,
+        amountDue: bill.amount,
+        totalAmount: bill.amount,
       })),
     };
 
     try {
-      // Call your backend to create a payment intent
       const response = await fetch("http://localhost:8085/bill/create-checkout-session", {
-        method:"POST",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(paymentDetails),
       });
-  
+
       const { sessionId } = await response.json();
-  
-      // Use Stripe to redirect to the payment page
       const result = await stripe.redirectToCheckout({ sessionId });
-  
-      if(result.error) {
+
+      if (result.error) {
         console.log(result.error.message);
         alert("Payment failed. Please try again.");
       }
-    } catch(error) {
+    } catch (error) {
       console.error("Error creating payment:", error);
       alert("Error occurred while processing payment.");
-    };
+    }
   };
 
   return (
@@ -102,7 +82,7 @@ const UpcomingBill = () => {
     >
       <Header />
       <div>
-        <BillSearchComponent />
+        <BillSearchComponent handleListChange={setList} originalList={originalList} />
       </div>
 
       <div className="table-container">
@@ -110,6 +90,7 @@ const UpcomingBill = () => {
           <thead>
             <tr>
               <th></th>
+              <th>Bill Name</th>
               <th>Amount Due</th>
               <th>Total Amount</th>
               <th>Due Date</th>
@@ -118,19 +99,20 @@ const UpcomingBill = () => {
             </tr>
           </thead>
           <tbody>
-            {dummyData.map((data, index) => (
+            {Array.isArray(list) && list.map((data, index) => (
               <tr key={index}>
                 <td>
                   <input
                     type="checkbox"
-                    checked={selectedCategories.includes(data.category)}
-                    onChange={() => handleCheckboxChange(data.category)}
+                    checked={selectedBillIds.includes(data.billId)} // Check based on bill ID
+                    onChange={() => handleCheckboxChange(data.billId)} // Pass bill ID
                   />
                 </td>
-                <td>{data.amountDue}</td>
-                <td>{data.totalAmount}</td>
+                <td>{data.billName}</td>
+                <td>{data.amount}</td>
+                <td>{data.amount}</td>
                 <td>{data.dueDate}</td>
-                <td>{data.dueIn}</td>
+                <td>{Math.ceil((new Date(data.dueDate) - new Date()) / (1000 * 60 * 60 * 24))} days</td>
                 <td>{data.paymentStatus}</td>
               </tr>
             ))}
@@ -138,15 +120,9 @@ const UpcomingBill = () => {
         </table>
       </div>
       <div className="menu-buttons">
-        <Link to="/manageBills/overdueUpcoming" className="btn btn-primary">
-          Back
-        </Link>
-        <Link onClick={handlePayNowClick} className="btn btn-primary">
-          Pay Now
-        </Link>
-        <Link to="/manageBills" className="btn btn-primary">
-          Manage Bills
-        </Link>
+        <Link to="/manageBills/overdueUpcoming" className="btn btn-primary">Back</Link>
+        <Link onClick={handlePayNowClick} className="btn btn-primary">Pay Now</Link>
+        <Link to="/manageBills" className="btn btn-primary">Manage Bills</Link>
       </div>
     </motion.div>
   );
