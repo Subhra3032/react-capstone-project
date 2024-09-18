@@ -17,7 +17,7 @@ function AddBills() {
     const [isRecurring, setIsRecurring] = useState(false);
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         // Collect the data from the form
         const billData = {
@@ -38,23 +38,42 @@ function AddBills() {
             return;
         }
 
-        // Process the form data (send to API, save in state, etc.)
-        console.log('Form submitted:', billData);
+        const formData = new FormData(); // Initialize formData
 
-        // Example API call placeholder (if needed):
-        // fetch('/api/save-bill', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify(billData),
-        // }).then(response => response.json())
-        //   .then(data => {
-        //     console.log('Success:', data);
-        //   })
-        //   .catch((error) => {
-        //     console.error('Error:', error);
-        //   });
+        formData.append('billName', billName);
+        formData.append('category', category);
+        formData.append('billDate', billDate);
+        formData.append('dueDate', dueDate);
+        formData.append('amount', amount);
+        formData.append('reminderFrequency', reminderFrequency);
+        formData.append('notes', notes);
+        formData.append('isRecurring', isRecurring);
+
+        if (attachment) {
+            formData.append('attachment', attachment); // File handling
+        }
+
+        try {
+            // Send POST request to the API
+            const response = await fetch('http://localhost:8085/bill/add-bills', {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Success:', data);
+
+                // Show success message
+                alert('Bill saved successfully!');
+
+                // Redirect to Manage Bills page
+                navigate('/manageBills');
+            } 
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error occurred while saving bill. Please try again.');
+        }
 
         // Clear form after submission
         setBillName('');
