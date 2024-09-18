@@ -16,7 +16,7 @@ const SnoozeOrMarkBillsPaid = () => {
 
   // Fetching data using fetch instead of axios
   useEffect(() => {
-    fetch("http://localhost:8080/bill/all")
+    fetch("http://localhost:8080/bill/all?userId=user456")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -89,7 +89,7 @@ const SnoozeOrMarkBillsPaid = () => {
         fetch(
           `http://localhost:8080/bill/snooze?newDate=${
             snoozeDate.toISOString().split("T")[0]
-          }`,
+          }&userId=user456`,
           {
             method: "POST",
             headers: {
@@ -150,7 +150,7 @@ const SnoozeOrMarkBillsPaid = () => {
         paymentStatus: "paid",
       };
 
-      fetch("http://localhost:8080/bill/markAsPaid", {
+      fetch("http://localhost:8080/bill/markAsPaid?userId=user456", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
