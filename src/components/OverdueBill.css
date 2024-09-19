@@ -12,26 +12,31 @@
   }
   
   .overdue-table {
-    width: 70%; /* Adjust width as needed */
+    width: 70%;
     border-collapse: collapse;
-    margin: 0 auto; /* Center the table */
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #f4eafc; /* Light purple background */
+    font-size: 1rem;
   }
   
   .overdue-table th,
   .overdue-table td {
-    padding: 10px;
-    text-align: left;
-    color: #333; /* Darker color for text */
-    font-size: 18px; /* Increase font size */
-    font-weight: bold; /* Make text bolder */
+    padding: 12px 15px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+    font-weight: bold;
   }
   
   .overdue-table th {
-    font-size: 20px; /* Increase font size for headers */
+    background-color: #8e44ad; /* Darker purple for headers */
+    color: white; 
   }
   
-  .overdue-table td {
-    background-color: none; /* Ensure rows have no background */
+  .overdue-table tr:hover {
+    background-color: #dcd0ff; /* Slightly darker purple on hover */
   }
 
   
