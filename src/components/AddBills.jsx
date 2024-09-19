@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './AddBills.css';
 import { motion } from 'framer-motion';
 import Header from './Header';
@@ -15,51 +15,49 @@ function AddBills() {
     const [amount, setAmount] = useState('');
     const [reminderFrequency, setReminderFrequency] = useState('');
     const [notes, setNotes] = useState('');
-    const [attachment, setAttachment] = useState(null);
     const [isRecurring, setIsRecurring] = useState(false);
+    const [billId, setBillId] = useState('');
     const navigate = useNavigate();
+
+    const attachment = "attachment.pdf";
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // Collect the data from the form
+        
+        // Create the JSON object
         const billData = {
-            billName,
-            category,
-            billDate,
-            dueDate,
-            amount,
-            reminderFrequency,
-            notes,
-            attachment, // If you plan to upload a file, you'll need additional file handling logic
-            isRecurring,
-        };
+            billId: parseInt(billId),
+            billName: billName,
+            billCategory: category,
+            dueDate: dueDate,
+            amount: parseFloat(amount), // Ensure amount is a number
+            reminderFrequency: reminderFrequency,
+            attachment: attachment,
+            notes: notes,
+            isRecurring: isRecurring ? 'Y' : 'N',
+            paymentStatus: 'Unpaid',
+            userId: 'user123',
+        }
+
+        // Console log data for debugging
+        console.log('Sending Data:', JSON.stringify(billData));
+        
+        
 
         // Simple validation (you can add more detailed validation here if needed)
-        if (!billName || !category || !billDate || !dueDate || !amount || !reminderFrequency) {
+        if (!billName || !category || !dueDate || !amount || !reminderFrequency) {
             toast.warning('Please fill in all required fields.');
             return;
         }
 
-        const formData = new FormData(); // Initialize formData
-
-        formData.append('billName', billName);
-        formData.append('category', category);
-        formData.append('billDate', billDate);
-        formData.append('dueDate', dueDate);
-        formData.append('amount', amount);
-        formData.append('reminderFrequency', reminderFrequency);
-        formData.append('notes', notes);
-        formData.append('isRecurring', isRecurring);
-
-        if (attachment) {
-            formData.append('attachment', attachment); // File handling
-        }
-
         try {
             // Send POST request to the API
-            const response = await fetch('http://localhost:8085/bill/add-bills', {
+            const response = await fetch('http://localhost:8080/bill/add', {
                 method: 'POST',
-                body: formData,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(billData),
             });
 
             if (response.ok) {
@@ -68,10 +66,10 @@ function AddBills() {
 
                 // Show success message
                 toast.success('Bill saved successfully!');
-
-                // Redirect to Manage Bills page
-                navigate('/manageBills');
-            } 
+            } else {
+                // Handle non-200 responses here
+                toast.error('Failed to save bill. Please try again.');
+            }
         } catch (error) {
             console.error('Error:', error);
             toast.error('Error occurred while saving bill. Please try again.');
@@ -85,17 +83,13 @@ function AddBills() {
         setAmount('');
         setReminderFrequency('');
         setNotes('');
-        setAttachment(null);
         setIsRecurring(false);
-
-        console.log('Form submitted:', billData);
+        setBillId('');
 
         // Show success message
         // alert('Bill saved successfully!');
         // toast.success('Bill saved successfully!');
 
-        // Redirect to Manage Bills page
-        navigate('/manageBills');
     };
 
     const handleCancel = () => {
@@ -114,6 +108,15 @@ function AddBills() {
             <div className="add-bill-form">
                 <h2 className='add-bill-heading'>Add New Bill</h2>
                 <form onSubmit={handleSubmit}>
+                    <div className="form-row">
+                        <label>Bill ID</label>
+                        <input 
+                            type="text" 
+                            value={billId} 
+                            onChange={(e) => setBillId(e.target.value)} 
+                            required
+                        />
+                    </div>
                     <div className="form-row">
                         <label>Bill Name</label>
                         <input 
@@ -136,15 +139,6 @@ function AddBills() {
                             <option value="Rent">Rent</option>
                             <option value="Other">Other</option>
                         </select>
-                    </div>
-                    <div className="form-row">
-                        <label>Bill Date</label>
-                        <input 
-                            type="date" 
-                            value={billDate} 
-                            onChange={(e) => setBillDate(e.target.value)} 
-                            required
-                        />
                     </div>
                     <div className="form-row">
                         <label>Due Date</label>
@@ -178,16 +172,6 @@ function AddBills() {
                         </select>
                     </div>
                     <div className="form-row">
-                        <label>Attachment</label>
-                        <input 
-                            type="file" 
-                            text="Max size: 2MB (PDF)"
-                            accept="application/pdf" 
-                            onChange={(e) => setAttachment(e.target.files[0])} 
-                        />
-                        {/* <small>Max size: 2MB (PDF)</small> */}
-                    </div>
-                    <div className="form-row">
                         <label>Notes (if any)</label>
                         <textarea 
                             value={notes} 
@@ -208,7 +192,7 @@ function AddBills() {
                     </div>
                     <div className="form-actions">
                         <button type="button" className="button cancel-button" onClick={handleCancel}>Cancel</button>
-                        <button type="submit" className="button save-button">Save</button>
+                        <button onClick={handleSubmit} className="button save-button">Save</button>
                     </div>
                 </form>
             </div>
