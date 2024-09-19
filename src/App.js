@@ -16,12 +16,26 @@ import SnoozeOrMarkBillsPaid from "./components/SnoozeOrMarkBillsPaid";
 import ReminderSettings from "./components/ReminderSettings";
 import Success from "./components/Success";
 import Failure from "./components/Failure";
+import { ToastContainer } from "react-toastify"; // Import ToastContainer
+import 'react-toastify/dist/ReactToastify.css';  // Import toastify CSS
 
 function App() {
   return (
     <Router>
       <AnimatePresence mode="wait">
         <div className="App">
+          {/* Global ToastContainer for displaying toast notifications */}
+          <ToastContainer 
+            position="bottom-right" // Customize the position
+            autoClose={5000}     // Auto close after 5 seconds
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+          />
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/manageBills" element={<ManageBills />} />

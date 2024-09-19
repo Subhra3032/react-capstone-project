@@ -5,12 +5,13 @@ import "./UpcomingBill.css";
 import BillSearchComponent from "./BillSearchComponent";
 import Header from "./Header";
 import { loadStripe } from "@stripe/stripe-js";
+import { toast } from "react-toastify";
 
 const stripePromise = loadStripe("pk_test_51NPgG9SIMqwS7WNZEIQb2SSsVkXldQO3jNz2OvXM4YTNKbNTKEhyNIuIPYLD7jIEzDYH1G3hsRkaup8C7IffikUd00LiGt3GRA");
 
 const UpcomingBill = () => {
   const [list, setList] = useState([]);
-  const [selectedBillIds, setSelectedBillIds] = useState([]); // Track selected bill IDs
+  const [selectedBillIds, setSelectedBillIds] = useState([]);
   const [originalList, setOriginalList] = useState([]);
 
   useEffect(() => {
@@ -18,12 +19,14 @@ const UpcomingBill = () => {
       .then((response) => response.json())
       .then((data) => {
         setList(data);
-        setOriginalList(data); // Store original data for searching
+        setOriginalList(data);
       })
-      .catch((error) => console.error("Error fetching data:", error));
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        toast.error("Error fetching bill data. Please try again.");
+      });
   }, []);
 
-  // Toggle bill selection based on its ID
   const handleCheckboxChange = (billId) => {
     setSelectedBillIds((prevSelectedBillIds) =>
       prevSelectedBillIds.includes(billId)
@@ -35,11 +38,12 @@ const UpcomingBill = () => {
   const handlePayNowClick = async () => {
     const stripe = await stripePromise;
     const selectedBills = list.filter((bill) =>
-      selectedBillIds.includes(bill.billId) // Filter by bill IDs now
+      selectedBillIds.includes(bill.billId)
     );
 
     if (selectedBills.length === 0) {
-      alert("Please select at least one bill to proceed with payment.");
+      toast.warning("Please select at least one bill to proceed with payment.", {
+      });
       return;
     }
 
@@ -64,12 +68,11 @@ const UpcomingBill = () => {
       const result = await stripe.redirectToCheckout({ sessionId });
 
       if (result.error) {
-        console.log(result.error.message);
-        alert("Payment failed. Please try again.");
+        toast.error("Payment failed. Please try again.");
       }
     } catch (error) {
       console.error("Error creating payment:", error);
-      alert("Error occurred while processing payment.");
+      toast.error("Error occurred while processing payment.");
     }
   };
 
@@ -104,8 +107,8 @@ const UpcomingBill = () => {
                 <td>
                   <input
                     type="checkbox"
-                    checked={selectedBillIds.includes(data.billId)} // Check based on bill ID
-                    onChange={() => handleCheckboxChange(data.billId)} // Pass bill ID
+                    checked={selectedBillIds.includes(data.billId)}
+                    onChange={() => handleCheckboxChange(data.billId)}
                   />
                 </td>
                 <td>{data.billName}</td>

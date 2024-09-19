@@ -3,6 +3,8 @@ import './AddBills.css';
 import { motion } from 'framer-motion';
 import Header from './Header';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+
 
 
 function AddBills() {
@@ -34,7 +36,7 @@ function AddBills() {
 
         // Simple validation (you can add more detailed validation here if needed)
         if (!billName || !category || !billDate || !dueDate || !amount || !reminderFrequency) {
-            alert('Please fill in all required fields.');
+            toast.warning('Please fill in all required fields.');
             return;
         }
 
@@ -65,14 +67,14 @@ function AddBills() {
                 console.log('Success:', data);
 
                 // Show success message
-                alert('Bill saved successfully!');
+                toast.success('Bill saved successfully!');
 
                 // Redirect to Manage Bills page
                 navigate('/manageBills');
             } 
         } catch (error) {
             console.error('Error:', error);
-            alert('Error occurred while saving bill. Please try again.');
+            toast.error('Error occurred while saving bill. Please try again.');
         }
 
         // Clear form after submission
@@ -89,7 +91,8 @@ function AddBills() {
         console.log('Form submitted:', billData);
 
         // Show success message
-        alert('Bill saved successfully!');
+        // alert('Bill saved successfully!');
+        // toast.success('Bill saved successfully!');
 
         // Redirect to Manage Bills page
         navigate('/manageBills');

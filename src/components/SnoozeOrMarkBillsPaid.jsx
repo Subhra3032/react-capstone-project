@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify"; // Import toast for notifications
 import "./SnoozeOrMarkBillsPaid.css";
 import SnoozeHelper from "./SnoozeHelper";
 import Header from "./Header";
@@ -8,13 +9,12 @@ import Header from "./Header";
 const SnoozeOrMarkBillsPaid = () => {
   const [selectedBills, setSelectedBills] = useState([]);
   const [snoozeDate, setSnoozeDate] = useState(new Date());
-  const [searchTerm, setSearchTerm] = useState(""); // State to hold the search term
+  const [searchTerm, setSearchTerm] = useState(""); 
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [billsData, setBillsData] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1); // State for current page
-  const billsPerPage = 4; // Number of bills to display per page
+  const [currentPage, setCurrentPage] = useState(1);
+  const billsPerPage = 4;
 
-  // Fetching data using fetch instead of axios
   useEffect(() => {
     fetch("http://localhost:8080/bill/all?userId=user456")
       .then((response) => {
@@ -25,43 +25,38 @@ const SnoozeOrMarkBillsPaid = () => {
       })
       .then((data) => {
         const today = new Date();
-
-        // Calculate overdue days for each bill
         const updatedData = data.map((bill) => {
           if (bill.paymentStatus.toLowerCase() === "paid") {
             return {
               ...bill,
               overdueBy: "0 days",
-              amountDue: bill.amount, // Assuming 'amount' is the amount due
-              totalAmount: bill.amount, // If the bill is paid, set overdueBy to "0 days"
+              amountDue: bill.amount,
+              totalAmount: bill.amount,
             };
           } else {
             const dueDate = new Date(bill.dueDate);
-            const timeDifference = today - dueDate; // difference in milliseconds
-            const overdueDays = Math.floor(
-              timeDifference / (1000 * 60 * 60 * 24)
-            ); // convert to days
+            const timeDifference = today - dueDate;
+            const overdueDays = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
             return {
               ...bill,
               overdueBy: overdueDays > 0 ? `${overdueDays} days` : "0 days",
-              amountDue: bill.amount, // Assuming 'amount' is the amount due
-              totalAmount: bill.amount, // update the overdueBy field
+              amountDue: bill.amount,
+              totalAmount: bill.amount,
             };
           }
         });
-
         setBillsData(updatedData);
-        console.log("Received and updated data:", updatedData[0]);
       })
       .catch((error) => {
         console.error("Error fetching bills:", error);
+        toast.error("Error fetching bills data.");
       });
   }, []);
 
   const handleCheckboxChange = (billName) => {
     setSelectedBills(
       (prevSelectedBills) =>
-        prevSelectedBills.includes(billName) ? [] : [billName] // Update selection logic to allow only one checked bill
+        prevSelectedBills.includes(billName) ? [] : [billName]
     );
   };
 
@@ -87,9 +82,9 @@ const SnoozeOrMarkBillsPaid = () => {
         };
 
         fetch(
-          `http://localhost:8080/bill/snooze?newDate=${
-            snoozeDate.toISOString().split("T")[0]
-          }&userId=user456`,
+          `http://localhost:8080/bill/snooze?newDate=${snoozeDate
+            .toISOString()
+            .split("T")[0]}&userId=user456`,
           {
             method: "POST",
             headers: {
@@ -117,17 +112,15 @@ const SnoozeOrMarkBillsPaid = () => {
             });
             setBillsData(updatedData);
             setSelectedBills([]);
-            alert(
-              "Bill successfully snoozed until " + snoozeDate.toDateString()
-            );
+            toast.success(`Bill successfully snoozed until ${snoozeDate.toDateString()}`);
           })
           .catch((error) => {
             console.error("Error snoozing bill:", error);
-            alert("There was an error snoozing the bill.");
+            toast.error("There was an error snoozing the bill.");
           });
       }
     } else {
-      alert("Please select a bill to snooze.");
+      toast.warn("Please select a bill to snooze.");
     }
   };
 
@@ -170,33 +163,27 @@ const SnoozeOrMarkBillsPaid = () => {
             }
             return bill;
           });
-          console.log("Payload to send:", JSON.stringify(billPayload));
           setBillsData(updatedData);
           setSelectedBills([]);
-          alert("Bill marked as paid!");
+          toast.success("Bill marked as paid!");
         })
         .catch((error) => {
           console.error("Error marking bill as paid:", error);
-          alert("There was an error marking the bill as paid.");
+          toast.error("There was an error marking the bill as paid.");
         });
     } else {
-      alert("Please select exactly one bill to mark as paid.");
+      toast.warn("Please select exactly one bill to mark as paid.");
     }
   };
 
   const handleSearch = (term) => {
-    setSearchTerm(term); // Update the search term
+    setSearchTerm(term);
   };
-
-  // const filteredData = billsData.filter((bill) =>
-  //   bill.billName.toLowerCase().includes(searchTerm.toLowerCase())
-  // );
 
   const handleCategoryChange = (category) => {
     setSelectedCategory(category);
   };
 
-  // Filter bills based on both search term and category
   const filteredData = billsData.filter((bill) => {
     const matchesSearchTerm = bill.billName
       .toLowerCase()
@@ -206,12 +193,9 @@ const SnoozeOrMarkBillsPaid = () => {
     return matchesSearchTerm && matchesCategory;
   });
 
-  // Pagination logic
-  const indexOfLastBill = currentPage * billsPerPage; // Get index of last bill on current page
-  const indexOfFirstBill = indexOfLastBill - billsPerPage; // Get index of first bill on current page
-  const currentBills = filteredData.slice(indexOfFirstBill, indexOfLastBill); // Bills for current page
-
-  // Calculate total pages
+  const indexOfLastBill = currentPage * billsPerPage;
+  const indexOfFirstBill = indexOfLastBill - billsPerPage;
+  const currentBills = filteredData.slice(indexOfFirstBill, indexOfLastBill);
   const totalPages = Math.ceil(filteredData.length / billsPerPage);
 
   return (
@@ -297,7 +281,7 @@ const SnoozeOrMarkBillsPaid = () => {
             type="date"
             id="snooze-date"
             className="date-picker"
-            onChange={(e) => setSnoozeDate(new Date(e.target.value))} // Update state with the selected date
+            onChange={(e) => setSnoozeDate(new Date(e.target.value))}
           />
           <button onClick={handleSnooze} className="btn btn-warning">
             Snooze

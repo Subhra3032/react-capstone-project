@@ -5,6 +5,7 @@ import "./OverdueBill.css";
 import BillSearchComponent from "./BillSearchComponent";
 import Header from "./Header";
 import { loadStripe } from "@stripe/stripe-js";
+import { toast } from 'react-toastify';
 
 const stripePromise = loadStripe("pk_test_51NPgG9SIMqwS7WNZEIQb2SSsVkXldQO3jNz2OvXM4YTNKbNTKEhyNIuIPYLD7jIEzDYH1G3hsRkaup8C7IffikUd00LiGt3GRA");
 
@@ -39,7 +40,7 @@ const OverdueBill = () => {
     );
 
     if (selectedBills.length === 0) {
-      alert("Please select at least one bill to proceed with payment.");
+      toast.warning("Please select at least one bill to proceed with payment.");
       return;
     }
 
@@ -65,11 +66,11 @@ const OverdueBill = () => {
 
       if (result.error) {
         console.log(result.error.message);
-        alert("Payment failed. Please try again.");
+        toast.error("Payment failed. Please try again.");
       }
     } catch (error) {
       console.error("Error creating payment:", error);
-      alert("Error occurred while processing payment.");
+      toast.error("Error occurred while processing payment.");
     }
   };
 
