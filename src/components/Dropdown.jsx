@@ -1,9 +1,9 @@
 import React from 'react';
 import './Dropdown.css';
 
-function Dropdown({ id, options, onChange }) {
+function Dropdown({ id, options,value, onChange }) {
     return (
-        <select id={id} className='dropdown' onChange={onChange}>
+        <select id={id} className='dropdown' onChange={onChange} value={value}>
             {options.map((option, index) => (
                 <option key={index} value={option}>
                     {option}

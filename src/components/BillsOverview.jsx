@@ -13,9 +13,9 @@ function BillsOverview() {
     const [category, setCategory] = useState('Utilities');
     const [fromDate, setFromDate] = useState('2024-01-01'); // Default values, update as needed
     const [toDate, setToDate] = useState('2024-12-31');     // Default values, update as needed
-    const [status, setStatus] = useState('Paid');           // Default status
+    const [status, setStatus] = useState('Unpaid');           // Default status
     const navigate = useNavigate();
-
+    console.log(status)
     const handleSubmit = () => {
         let path;
         
@@ -77,7 +77,7 @@ function BillsOverview() {
                 </div>
                 <div className='form-group'>
                     <label htmlFor='bill-date-to'>Bill Date To</label>
-                    <DatePicker id='bill-date-to' onChange={(date) => setToDate(date)} />
+                    <DatePicker id='bill-date-to' onChange={(date) => setToDate(date)}/>
                 </div>
                 <div className='form-group'>
                     <label htmlFor='bill-status'>Bill Status</label>
