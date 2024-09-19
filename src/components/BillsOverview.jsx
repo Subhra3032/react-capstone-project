@@ -20,32 +20,16 @@ function BillsOverview() {
         let path;
         
         switch(category) {
-            case 'Services':
-                path = '/manageBills/billsOverview/services';
-                break;
-
             case 'Rent':
                 path = '/manageBills/billsOverview/rent';
-                break;
-
-            case 'Loan':
-                path = '/manageBills/billsOverview/loan';
                 break;
 
             case 'Utilities':
                 path = '/manageBills/billsOverview/utilities';
                 break;
 
-            case 'Credit Card':
-                path = '/manageBills/billsOverview/creditCard';
-                break;
-
-            case 'Subscriptions':
-                path = '/manageBills/billsOverview/subscriptions';
-                break;
-
-            case 'Insurance':
-                path= '/manageBills/billsOverview/insurance';
+            case 'Subscription':
+                path = '/manageBills/billsOverview/subscription';
                 break;
 
             case 'Others':
@@ -82,7 +66,7 @@ function BillsOverview() {
                     <label htmlFor='bill-category'>Bill Category</label>
                     <Dropdown
                         id='bill-category'
-                        options={['Services', 'Rent', 'Loan', 'Utilities', 'Credit Card', 'Subscriptions', 'Insurance', 'Others']}
+                        options={['Utilities', 'Subscription', 'Rent', 'Others']}
                         onChange={(e) => setCategory(e.target.value)}
                     />
                 </div>
@@ -98,7 +82,7 @@ function BillsOverview() {
                     <label htmlFor='bill-status'>Bill Status</label>
                     <Dropdown
                         id='bill-status'
-                        options={['Paid', 'Upcoming', 'Unpaid']}
+                        options={['Paid', 'Unpaid']}
                         onChange={(e) => setStatus(e.target.value)}
                     />
                 </div>

@@ -39,7 +39,7 @@ function ReminderSettings() {
                         <label htmlFor="bill-category">Bill Category</label>
                         <Dropdown 
                             id="bill-category"
-                            options={['Services', 'Rent', 'Loan', 'Utilities', 'Credit Card', 'Subscriptions', 'Insurance', 'Others']}
+                            options={['Utilities', 'Subscription', 'Rent', 'Others']}
                             onChange={handleCategoryChange}
                         />
                     </div>
