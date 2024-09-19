@@ -10,7 +10,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 function BillsOverview() {
 
-    const [category, setCategory] = useState('All');
+    const [category, setCategory] = useState('Utilities');
     const [fromDate, setFromDate] = useState('2024-01-01'); // Default values, update as needed
     const [toDate, setToDate] = useState('2024-12-31');     // Default values, update as needed
     const [status, setStatus] = useState('Paid');           // Default status
@@ -67,6 +67,7 @@ function BillsOverview() {
                     <Dropdown
                         id='bill-category'
                         options={['Utilities', 'Subscription', 'Rent', 'Others']}
+                        value={category}
                         onChange={(e) => setCategory(e.target.value)}
                     />
                 </div>
@@ -83,6 +84,7 @@ function BillsOverview() {
                     <Dropdown
                         id='bill-status'
                         options={['Paid', 'Unpaid']}
+                        value={status}
                         onChange={(e) => setStatus(e.target.value)}
                     />
                 </div>

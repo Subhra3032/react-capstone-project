@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './BillDetailsPage.css';
-import { Link, useLocation, useParams } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Header from './Header';
 import InfoCard from './InfoCard';
@@ -16,7 +16,7 @@ function BillDetailsPage() {
         // Fetch bills based on category, fromDate, toDate, and status
         const fetchBills = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/bill/overview?category=${category}&fromDate=${fromDate}&toDate=${toDate}&status=${status}&userId=user123`);
+                const response = await fetch(`http://localhost:8080/bill/overview?category=${category}&fromDate=${fromDate}&toDate=${toDate}&status=${status}&userId=user456`);
                 if (response.ok) {
                     const data = await response.json();
                     setBillsData(data); // Set the fetched data to billsData state
