@@ -54,3 +54,20 @@
     text-decoration: none;
     color: inherit;
 }
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.pagination-btn {
+    margin: 0 10px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.pagination span {
+    font-weight: bold;
+}

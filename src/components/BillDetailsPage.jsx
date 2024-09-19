@@ -10,13 +10,17 @@ function BillDetailsPage() {
     const location = useLocation();
     const { category, fromDate, toDate, status } = location.state || {}; // Get the state passed from the previous page
 
+    const adjustedStatus = status === "Paid" ? "paid" : status;
+
     const [billsData, setBillsData] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const billsPerPage = 4; // You can adjust the number of bills per page
     
     useEffect(() => {
         // Fetch bills based on category, fromDate, toDate, and status
         const fetchBills = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/bill/overview?category=${category}&fromDate=${fromDate}&toDate=${toDate}&status=${status}&userId=user456`);
+                const response = await fetch(`http://localhost:8080/bill/overview?category=${category}&fromDate=${fromDate}&toDate=${toDate}&status=${adjustedStatus}&userId=user456`);
                 if (response.ok) {
                     const data = await response.json();
                     setBillsData(data); // Set the fetched data to billsData state
@@ -32,6 +36,24 @@ function BillDetailsPage() {
             fetchBills();
         }
     }, [category, fromDate, toDate, status]); // Fetch data when these dependencies change
+
+    // Pagination logic
+    const indexOfLastBill = currentPage * billsPerPage;
+    const indexOfFirstBill = indexOfLastBill - billsPerPage;
+    const currentBills = billsData.slice(indexOfFirstBill, indexOfLastBill);
+    const totalPages = Math.ceil(billsData.length / billsPerPage);
+
+    const handleNextPage = () => {
+        if (currentPage < totalPages) {
+            setCurrentPage(currentPage + 1);
+        }
+    };
+
+    const handlePreviousPage = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
+    };
 
     return (
         <motion.div
@@ -76,6 +98,27 @@ function BillDetailsPage() {
                         )}
                     </tbody>
                 </table>
+
+                {/* Pagination Controls */}
+                <div className="pagination">
+                    <button
+                        onClick={handlePreviousPage}
+                        disabled={currentPage === 1}
+                        className="pagination-btn"
+                    >
+                        Previous
+                    </button>
+                    <span>
+                        Page {currentPage} of {totalPages}
+                    </span>
+                    <button
+                        onClick={handleNextPage}
+                        disabled={currentPage === totalPages}
+                        className="pagination-btn"
+                    >
+                        Next
+                    </button>
+                </div>
             </div>
         </motion.div>
     );
