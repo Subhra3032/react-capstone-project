@@ -12,10 +12,13 @@
 .add-bill-form {
     min-width: 900px;
     margin: 0 auto;
-    padding: 20px;
+    padding:0px 50px;
     max-height: 600px;
     overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent; 
 }
+
 
 .add-bill-heading {
     color: purple;
