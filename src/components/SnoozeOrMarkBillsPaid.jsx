@@ -26,7 +26,7 @@ const SnoozeOrMarkBillsPaid = () => {
       .then((data) => {
         const today = new Date();
         const updatedData = data.map((bill) => {
-          if (bill.paymentStatus.toLowerCase() === "paid") {
+          if (bill.paymentStatus.toLowerCase() === "Paid") {
             return {
               ...bill,
               overdueBy: "0 days",
