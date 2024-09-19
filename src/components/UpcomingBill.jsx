@@ -13,6 +13,8 @@ const UpcomingBill = () => {
   const [list, setList] = useState([]);
   const [selectedBillIds, setSelectedBillIds] = useState([]);
   const [originalList, setOriginalList] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const billsPerPage = 5;
 
   useEffect(() => {
     fetch("http://localhost:8080/bill/upcoming?userId=user456")
@@ -42,8 +44,7 @@ const UpcomingBill = () => {
     );
 
     if (selectedBills.length === 0) {
-      toast.warning("Please select at least one bill to proceed with payment.", {
-      });
+      toast.warning("Please select at least one bill to proceed with payment.");
       return;
     }
 
@@ -76,6 +77,12 @@ const UpcomingBill = () => {
     }
   };
 
+  // Pagination logic
+  const indexOfLastBill = currentPage * billsPerPage;
+  const indexOfFirstBill = indexOfLastBill - billsPerPage;
+  const currentBills = list.slice(indexOfFirstBill, indexOfLastBill);
+  const totalPages = Math.ceil(list.length / billsPerPage);
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.5 }}
@@ -102,26 +109,51 @@ const UpcomingBill = () => {
             </tr>
           </thead>
           <tbody>
-            {Array.isArray(list) && list.map((data, index) => (
-              <tr key={index}>
-                <td>
-                  <input
-                    type="checkbox"
-                    checked={selectedBillIds.includes(data.billId)}
-                    onChange={() => handleCheckboxChange(data.billId)}
-                  />
-                </td>
-                <td>{data.billName}</td>
-                <td>{data.amount}</td>
-                <td>{data.amount}</td>
-                <td>{data.dueDate}</td>
-                <td>{Math.ceil((new Date(data.dueDate) - new Date()) / (1000 * 60 * 60 * 24))} days</td>
-                <td>{data.paymentStatus}</td>
+            {currentBills.length > 0 ? (
+              currentBills.map((data, index) => (
+                <tr key={index}>
+                  <td>
+                    <input
+                      type="checkbox"
+                      checked={selectedBillIds.includes(data.billId)}
+                      onChange={() => handleCheckboxChange(data.billId)}
+                    />
+                  </td>
+                  <td>{data.billName}</td>
+                  <td>{data.amount}</td>
+                  <td>{data.amount}</td>
+                  <td>{data.dueDate}</td>
+                  <td>{Math.ceil((new Date(data.dueDate) - new Date()) / (1000 * 60 * 60 * 24))} days</td>
+                  <td>{data.paymentStatus}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={4}>No bills found</td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>
+
+      <div className="pagination">
+        <button
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+        >
+          Previous
+        </button>
+        <span>
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+          disabled={currentPage === totalPages}
+        >
+          Next
+        </button>
+      </div>
+
       <div className="menu-buttons">
         <Link to="/manageBills/overdueUpcoming" className="btn btn-primary">Back</Link>
         <Link onClick={handlePayNowClick} className="btn btn-primary">Pay Now</Link>

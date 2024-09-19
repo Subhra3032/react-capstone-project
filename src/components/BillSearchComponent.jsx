@@ -1,11 +1,12 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./BillSearchComponent.css";
 import { faFilter } from "@fortawesome/free-solid-svg-icons";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Popover from "react-bootstrap/Popover";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { Badge } from "react-bootstrap";
 
 const BillSearchComponent = ({ handleListChange, originalList }) => {
   const [name, setName] = useState("");
@@ -51,7 +52,7 @@ const BillSearchComponent = ({ handleListChange, originalList }) => {
 
   const handleName = (event) => {
     setName(event.target.value);
-    setSelectedDate(null); // Reset date filter when name changes 
+    setSelectedDate(null); // Reset date filter when name changes
   };
 
   const handleDate = (date) => {
@@ -133,6 +134,17 @@ const BillSearchComponent = ({ handleListChange, originalList }) => {
             size="xl"
           />
         </OverlayTrigger>
+        {selectedDate && (
+          <Badge
+            bg="danger"
+            pill
+            onClick={() => {
+              setSelectedDate(null);
+            }}
+          >
+            X
+          </Badge>
+        )}
       </div>
     </div>
   );

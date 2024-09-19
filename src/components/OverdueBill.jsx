@@ -11,20 +11,21 @@ const stripePromise = loadStripe("pk_test_51NPgG9SIMqwS7WNZEIQb2SSsVkXldQO3jNz2O
 
 const OverdueBill = () => {
   const [list, setList] = useState([]);
-  const [selectedBillIds, setSelectedBillIds] = useState([]); // Track selected bill IDs
+  const [selectedBillIds, setSelectedBillIds] = useState([]);
   const [originalList, setOriginalList] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const billsPerPage = 5;
 
   useEffect(() => {
-    fetch("http://localhost:8080/bill/overdue?userId=user456") // Updated to overdue bills API
+    fetch("http://localhost:8080/bill/overdue?userId=user456")
       .then((response) => response.json())
       .then((data) => {
         setList(data);
-        setOriginalList(data); // Store original data for searching
+        setOriginalList(data);
       })
       .catch((error) => console.error("Error fetching data:", error));
   }, []);
 
-  // Toggle bill selection based on its ID
   const handleCheckboxChange = (billId) => {
     setSelectedBillIds((prevSelectedBillIds) =>
       prevSelectedBillIds.includes(billId)
@@ -36,7 +37,7 @@ const OverdueBill = () => {
   const handlePayNowClick = async () => {
     const stripe = await stripePromise;
     const selectedBills = list.filter((bill) =>
-      selectedBillIds.includes(bill.billId) // Filter by bill IDs
+      selectedBillIds.includes(bill.billId)
     );
 
     if (selectedBills.length === 0) {
@@ -65,7 +66,6 @@ const OverdueBill = () => {
       const result = await stripe.redirectToCheckout({ sessionId });
 
       if (result.error) {
-        console.log(result.error.message);
         toast.error("Payment failed. Please try again.");
       }
     } catch (error) {
@@ -73,6 +73,12 @@ const OverdueBill = () => {
       toast.error("Error occurred while processing payment.");
     }
   };
+
+  // Pagination logic
+  const indexOfLastBill = currentPage * billsPerPage;
+  const indexOfFirstBill = indexOfLastBill - billsPerPage;
+  const currentBills = list.slice(indexOfFirstBill, indexOfLastBill);
+  const totalPages = Math.ceil(list.length / billsPerPage);
 
   return (
     <motion.div
@@ -100,26 +106,49 @@ const OverdueBill = () => {
             </tr>
           </thead>
           <tbody>
-            {Array.isArray(list) && list.map((data, index) => (
-              <tr key={index}>
-                <td>
-                  <input
-                    type="checkbox"
-                    checked={selectedBillIds.includes(data.billId)} // Check based on bill ID
-                    onChange={() => handleCheckboxChange(data.billId)} // Pass bill ID
-                  />
-                </td>
-                <td>{data.billName}</td>
-                <td>{data.amount}</td>
-                <td>{data.amount}</td>
-                <td>{data.dueDate}</td>
-                <td>{Math.floor((new Date() - new Date(data.dueDate)) / (1000 * 60 * 60 * 24))} days</td>
-                <td>{data.paymentStatus}</td>
+            {currentBills.length > 0 ? (
+              currentBills.map((data, index) => (
+                <tr key={index}>
+                  <td>
+                    <input
+                      type="checkbox"
+                      checked={selectedBillIds.includes(data.billId)}
+                      onChange={() => handleCheckboxChange(data.billId)}
+                    />
+                  </td>
+                  <td>{data.billName}</td>
+                  <td>{data.amount}</td>
+                  <td>{data.amount}</td>
+                  <td>{data.dueDate}</td>
+                  <td>{Math.floor((new Date() - new Date(data.dueDate)) / (1000 * 60 * 60 * 24))} days</td>
+                  <td>{data.paymentStatus}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={7} className="no-bills">No bills found</td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>
+
+      <div className="pagination">
+        <button
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+        >
+          Previous
+        </button>
+        <span>Page {currentPage} of {totalPages}</span>
+        <button
+          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+          disabled={currentPage === totalPages}
+        >
+          Next
+        </button>
+      </div>
+
       <div className="menu-buttons">
         <Link to="/manageBills/overdueUpcoming" className="btn btn-primary">Back</Link>
         <Link onClick={handlePayNowClick} className="btn btn-primary">Pay Now</Link>

@@ -48,3 +48,40 @@
   .menu-buttons .btn {
     margin: 0 20px;
   }
+  /* Add this CSS to your UpcomingBill.css file */
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination button {
+  background-color: #003a79; /* Blue background color */
+  border: 1px solid #003a79; /* Blue border */
+  color: white; /* White text color */
+  padding: 5px 10px; /* Smaller padding for smaller buttons */
+  margin: 0 5px; /* Space between buttons */
+  border-radius: 4px; /* Rounded corners */
+  font-size: 14px; /* Smaller text size */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s, border-color 0.3s; /* Smooth transition */
+}
+
+.pagination button:disabled {
+  background-color: #d6d6d6; /* Grey background for disabled state */
+  border-color: #8d8c8c; /* Grey border for disabled state */
+  color: #a0a0a0; /* Grey text color for disabled state */
+  cursor: not-allowed; /* Not-allowed cursor for disabled state */
+}
+
+.pagination button:hover:not(:disabled) {
+  background-color: #014084; /* Darker blue background on hover */
+  border-color: #014084; /* Darker blue border on hover */
+}
+
+.pagination span {
+  margin: 0 10px; /* Space around page number indicator */
+  font-size: 14px; /* Match text size with buttons */
+  line-height: 1.5; /* Line height for better readability */
+}
