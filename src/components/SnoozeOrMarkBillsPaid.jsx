@@ -9,7 +9,7 @@ import Header from "./Header";
 const SnoozeOrMarkBillsPaid = () => {
   const [selectedBills, setSelectedBills] = useState([]);
   const [snoozeDate, setSnoozeDate] = useState(new Date());
-  const [searchTerm, setSearchTerm] = useState(""); 
+  const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [billsData, setBillsData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -30,13 +30,16 @@ const SnoozeOrMarkBillsPaid = () => {
             return {
               ...bill,
               overdueBy: "0 days",
+              paymentStatus: "Paid",
               amountDue: bill.amount,
               totalAmount: bill.amount,
             };
           } else {
             const dueDate = new Date(bill.dueDate);
             const timeDifference = today - dueDate;
-            const overdueDays = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+            const overdueDays = Math.floor(
+              timeDifference / (1000 * 60 * 60 * 24)
+            );
             return {
               ...bill,
               overdueBy: overdueDays > 0 ? `${overdueDays} days` : "0 days",
@@ -54,9 +57,8 @@ const SnoozeOrMarkBillsPaid = () => {
   }, []);
 
   const handleCheckboxChange = (billName) => {
-    setSelectedBills(
-      (prevSelectedBills) =>
-        prevSelectedBills.includes(billName) ? [] : [billName]
+    setSelectedBills((prevSelectedBills) =>
+      prevSelectedBills.includes(billName) ? [] : [billName]
     );
   };
 
@@ -64,7 +66,7 @@ const SnoozeOrMarkBillsPaid = () => {
     if (selectedBills.length > 0) {
       const billToSnooze = billsData.find(
         (bill) =>
-          selectedBills.includes(bill.billName) && bill.paymentStatus !== "paid"
+          selectedBills.includes(bill.billName) && bill.paymentStatus !== "Paid"
       );
 
       if (billToSnooze) {
@@ -82,9 +84,9 @@ const SnoozeOrMarkBillsPaid = () => {
         };
 
         fetch(
-          `http://localhost:8080/bill/snooze?newDate=${snoozeDate
-            .toISOString()
-            .split("T")[0]}&userId=user456`,
+          `http://localhost:8080/bill/snooze?newDate=${
+            snoozeDate.toISOString().split("T")[0]
+          }&userId=user456`,
           {
             method: "POST",
             headers: {
@@ -112,7 +114,9 @@ const SnoozeOrMarkBillsPaid = () => {
             });
             setBillsData(updatedData);
             setSelectedBills([]);
-            toast.success(`Bill successfully snoozed until ${snoozeDate.toDateString()}`);
+            toast.success(
+              `Bill successfully snoozed until ${snoozeDate.toDateString()}`
+            );
           })
           .catch((error) => {
             console.error("Error snoozing bill:", error);
@@ -159,7 +163,7 @@ const SnoozeOrMarkBillsPaid = () => {
         .then((data) => {
           const updatedData = billsData.map((bill) => {
             if (bill.billId === billToUpdate.billId) {
-              return { ...bill, paymentStatus: "paid", overdueBy: "0 days" };
+              return { ...bill, paymentStatus: "Paid", overdueBy: "0 days" };
             }
             return bill;
           });
