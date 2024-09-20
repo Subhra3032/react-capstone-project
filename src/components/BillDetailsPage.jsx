@@ -10,8 +10,6 @@ function BillDetailsPage() {
     const location = useLocation();
     const { category, fromDate, toDate, status } = location.state || {}; // Get the state passed from the previous page
 
-    const adjustedStatus = status === "Paid" ? "paid" : status;
-
     const [billsData, setBillsData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const billsPerPage = 4; // You can adjust the number of bills per page
@@ -20,7 +18,7 @@ function BillDetailsPage() {
         // Fetch bills based on category, fromDate, toDate, and status
         const fetchBills = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/bill/overview?category=${category}&fromDate=${fromDate}&toDate=${toDate}&status=${adjustedStatus}&userId=user456`);
+                const response = await fetch(`http://localhost:8080/bill/overview?category=${category}&fromDate=${fromDate}&toDate=${toDate}&status=${status}&userId=user123`);
                 if (response.ok) {
                     const data = await response.json();
                     setBillsData(data); // Set the fetched data to billsData state

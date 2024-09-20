@@ -16,7 +16,6 @@ function AddBills() {
     const [reminderFrequency, setReminderFrequency] = useState('');
     const [notes, setNotes] = useState('');
     const [isRecurring, setIsRecurring] = useState(false);
-    const [billId, setBillId] = useState('');
     const navigate = useNavigate();
 
     const attachment = "attachment.pdf";
@@ -26,7 +25,6 @@ function AddBills() {
         
         // Create the JSON object
         const billData = {
-            billId: parseInt(billId),
             billName: billName,
             billCategory: category,
             dueDate: dueDate,
@@ -84,7 +82,6 @@ function AddBills() {
         setReminderFrequency('');
         setNotes('');
         setIsRecurring(false);
-        setBillId('');
 
         // Show success message
         // alert('Bill saved successfully!');
@@ -108,15 +105,6 @@ function AddBills() {
             <div className="add-bill-form">
                 <h2 className='add-bill-heading'>Add New Bill</h2>
                 <form onSubmit={handleSubmit}>
-                    <div className="form-row">
-                        <label>Bill ID</label>
-                        <input 
-                            type="text" 
-                            value={billId} 
-                            onChange={(e) => setBillId(e.target.value)} 
-                            required
-                        />
-                    </div>
                     <div className="form-row">
                         <label>Bill Name</label>
                         <input 
