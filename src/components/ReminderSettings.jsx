@@ -9,13 +9,43 @@ import DatePicker from './DatePicker';
 
 function ReminderSettings() {
 
-    const [category, setCategory] = useState('');
+    const [category, setCategory] = useState('Utilities');
     const [billName, setBillName] = useState('');
     const [showReminderOptions, setShowReminderOptions] = useState(false);
+    const [bills, setBills] = useState([]);
+    const [billOptions, setBillOptions] = useState([]);
+    const [isRecurring, setIsRecurring] = useState(false);
+
+    useEffect(() => {
+        if(category) {
+            fetch('http://localhost:8080/bill/all?userId=user123')
+                .then(response => response.json())
+                .then(data => {
+                    // Filter bills based on the selected category
+                    const filteredBills = data.filter(bill => bill.billCategory === category);
+                    const billNames = filteredBills.map(bill => bill.billName);
+                    setBillOptions(billNames);
+
+                    if(billNames.length !== 0) {
+                        setBillName(billNames[0]);
+                        setShowReminderOptions(true);
+                    } else {
+                        setBillName('');
+                        setShowReminderOptions(false);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching bills:', error);
+                });
+        } else {
+            setBillOptions([]); // Clear the Bill Name options when no category is selected
+            setBillName('');
+            setShowReminderOptions(false);
+        }
+    }, [category]);
 
     const handleCategoryChange = (e) => {
         setCategory(e.target.value);
-        setShowReminderOptions(!!e.target.value && !!billName);
     }
 
     const handleBillNameChange = (e) => {
@@ -44,12 +74,10 @@ function ReminderSettings() {
                         />
                     </div>
                     <div className='form-group'>
-                        <label htmlFor="bill-name">Bill Name</label>
-                        <input 
-                            type="text"
+                        <label htmlFor='bill-name'>Bill Name</label>
+                        <Dropdown 
                             id="bill-name"
-                            placeholder="Search Bill Name"
-                            value={billName}
+                            options={billOptions}
                             onChange={handleBillNameChange}
                         />
                     </div>
@@ -102,7 +130,15 @@ function ReminderSettings() {
 
                             <div className='form-group recurring-switch'>
                                 <label htmlFor="recurring-bill">Recurring Bill</label>
-                                <input type="checkbox" id="recurring-bill" />
+                                <div className='toggle-switch'>
+                                    <input 
+                                        type='checkbox'
+                                        id='recurring-toggle'
+                                        checked={isRecurring} 
+                                        onChange={() => setIsRecurring(!isRecurring)} 
+                                    />
+                                    <label className="slider" htmlFor="recurring-toggle"></label>
+                                </div>
                             </div>
 
                             <button className='submit-btn'>Submit</button>
