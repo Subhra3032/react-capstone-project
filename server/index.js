@@ -17,9 +17,9 @@ app.post('/bill/create-checkout-session', async (req, res) => {
             payment_method_types: ['card'],
             line_items: bills.map((bill) => ({
                 price_data: {
-                    currency: 'usd',
+                    currency: 'inr',
                     product_data: {
-                        name: `Payment for ${bill.category}`,
+                        name: `Payment for ${bill.name}`,
                     },
                     unit_amount: Math.round(bill.amountDue * 100),
                 },

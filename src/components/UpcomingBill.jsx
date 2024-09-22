@@ -17,7 +17,7 @@ const UpcomingBill = () => {
   const billsPerPage = 5;
 
   useEffect(() => {
-    fetch("http://localhost:8080/bill/upcoming?userId=user456")
+    fetch("http://localhost:8080/bill/upcoming?userId=user123")
       .then((response) => response.json())
       .then((data) => {
         setList(data);
@@ -50,6 +50,7 @@ const UpcomingBill = () => {
 
     const paymentDetails = {
       bills: selectedBills.map((bill) => ({
+        name: bill.billName,
         category: bill.billCategory,
         amountDue: bill.amount,
         totalAmount: bill.amount,
