@@ -5,6 +5,7 @@ import { toast } from "react-toastify"; // Import toast for notifications
 import "./SnoozeOrMarkBillsPaid.css";
 import SnoozeHelper from "./SnoozeHelper";
 import Header from "./Header";
+import { useSelector } from "react-redux";
 
 const SnoozeOrMarkBillsPaid = () => {
   const [selectedBills, setSelectedBills] = useState([]);
@@ -15,8 +16,9 @@ const SnoozeOrMarkBillsPaid = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const billsPerPage = 4;
 
+  const username = useSelector((state) => state.user);
   useEffect(() => {
-    fetch("http://localhost:8080/bill/all?userId=user456")
+    fetch(`http://localhost:8080/bill/all?userId=${username}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -54,7 +56,7 @@ const SnoozeOrMarkBillsPaid = () => {
         console.error("Error fetching bills:", error);
         toast.error("Error fetching bills data.");
       });
-  }, []);
+  }, [username]);
 
   const handleCheckboxChange = (billName) => {
     setSelectedBills((prevSelectedBills) =>
@@ -86,7 +88,7 @@ const SnoozeOrMarkBillsPaid = () => {
         fetch(
           `http://localhost:8080/bill/snooze?newDate=${
             snoozeDate.toISOString().split("T")[0]
-          }&userId=user456`,
+          }&userId=${username}`,
           {
             method: "POST",
             headers: {
@@ -147,7 +149,7 @@ const SnoozeOrMarkBillsPaid = () => {
         paymentStatus: "paid",
       };
 
-      fetch("http://localhost:8080/bill/markAsPaid?userId=user456", {
+      fetch(`http://localhost:8080/bill/markAsPaid?userId=${username}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
