@@ -31,6 +31,7 @@ function ManageBills() {
           text="Snooze or Mark Paid Bills"
           to="/manageBills/snoozeOrMarkBillsPaid"
         />
+        <Feature text="Remove Bills" to='/manageBills/removeBills' />
       </div>
     </motion.div>
   );

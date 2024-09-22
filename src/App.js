@@ -19,6 +19,7 @@ import Failure from "./components/Failure";
 import { ToastContainer } from "react-toastify"; // Import ToastContainer
 import 'react-toastify/dist/ReactToastify.css';  // Import toastify CSS
 import Login from "./components/Login";
+import RemoveBills from "./components/RemoveBills";
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<HomePage />} />
             <Route path="/manageBills" element={<ManageBills />} />
+            <Route path="/manageBills/removeBills" element={<RemoveBills />} />
             <Route path="/manageBills/addBills" element={<AddBills />} />
             <Route
               path="/manageBills/billsOverview"
