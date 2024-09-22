@@ -1,5 +1,5 @@
 const initialState = {
-    user: null,
+    user: localStorage.getItem('user') || null, // Retrieve user from localStorage
 };
 
 export const userReducer = (state = initialState, action) => {

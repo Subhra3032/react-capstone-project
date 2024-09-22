@@ -12,6 +12,7 @@ function Login() {
     const handleLogin = () => {
         if(username.trim() !== '') {
             dispatch(loginUser(username));
+            localStorage.setItem('user', username); // Store username in localStorage
         }
 
         navigate('/');

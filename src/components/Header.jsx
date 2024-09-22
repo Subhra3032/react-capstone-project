@@ -2,13 +2,22 @@ import React from 'react';
 import './Header.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBell, faUser } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { logoutUser } from '../redux/actions';
 
 function Header() {
 
     // Get the username from the Redux store
     const username = useSelector((state) => state.user);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const handleLogout = () => {
+        dispatch(logoutUser());
+        localStorage.removeItem('user'); // Clear the user from localStorage
+        navigate('/login');
+    };
 
     return (
         <div className='header'>
@@ -21,7 +30,13 @@ function Header() {
                     Notification
                 </div>
                 <div className='tab'>
-                    {username ? username : "Profile"}
+                    {username ? (
+                        <span onClick={handleLogout}>{username}</span>
+                    ) : (
+                        <Link className='link-wrapper' to='/login'>
+                            Login
+                        </Link>
+                    )}
                     <FontAwesomeIcon icon={faUser} className='fa-icon' />
                 </div>
             </div>
