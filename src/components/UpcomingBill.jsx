@@ -6,18 +6,19 @@ import BillSearchComponent from "./BillSearchComponent";
 import Header from "./Header";
 import { loadStripe } from "@stripe/stripe-js";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 const stripePromise = loadStripe("pk_test_51NPgG9SIMqwS7WNZEIQb2SSsVkXldQO3jNz2OvXM4YTNKbNTKEhyNIuIPYLD7jIEzDYH1G3hsRkaup8C7IffikUd00LiGt3GRA");
 
 const UpcomingBill = () => {
+  const username=useSelector(state=>state.user)
   const [list, setList] = useState([]);
   const [selectedBillIds, setSelectedBillIds] = useState([]);
   const [originalList, setOriginalList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const billsPerPage = 5;
-
   useEffect(() => {
-    fetch("http://localhost:8080/bill/upcoming?userId=user123")
+    fetch(`http://localhost:8080/bill/upcoming?userId=${username}`)
       .then((response) => response.json())
       .then((data) => {
         setList(data);

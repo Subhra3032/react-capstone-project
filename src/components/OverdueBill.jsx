@@ -6,6 +6,7 @@ import BillSearchComponent from "./BillSearchComponent";
 import Header from "./Header";
 import { loadStripe } from "@stripe/stripe-js";
 import { toast } from 'react-toastify';
+import { useSelector } from "react-redux";
 
 const stripePromise = loadStripe("pk_test_51NPgG9SIMqwS7WNZEIQb2SSsVkXldQO3jNz2OvXM4YTNKbNTKEhyNIuIPYLD7jIEzDYH1G3hsRkaup8C7IffikUd00LiGt3GRA");
 
@@ -15,9 +16,10 @@ const OverdueBill = () => {
   const [originalList, setOriginalList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const billsPerPage = 5;
+  const username=useSelector(state=>state.user)
 
   useEffect(() => {
-    fetch("http://localhost:8080/bill/overdue?userId=user456")
+    fetch(`http://localhost:8080/bill/overdue?userId=${username}`)
       .then((response) => response.json())
       .then((data) => {
         setList(data);
