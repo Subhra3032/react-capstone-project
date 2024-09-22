@@ -98,25 +98,27 @@ function BillDetailsPage() {
                 </table>
 
                 {/* Pagination Controls */}
-                <div className="pagination">
-                    <button
-                        onClick={handlePreviousPage}
-                        disabled={currentPage === 1}
-                        className="pagination-btn"
-                    >
-                        Previous
-                    </button>
-                    <span>
-                        Page {currentPage} of {totalPages}
-                    </span>
-                    <button
-                        onClick={handleNextPage}
-                        disabled={currentPage === totalPages}
-                        className="pagination-btn"
-                    >
-                        Next
-                    </button>
-                </div>
+                {billsData.length > 0 && (
+                    <div className="pagination">
+                        <button
+                            onClick={handlePreviousPage}
+                            disabled={currentPage === 1}
+                            className="pagination-btn"
+                        >
+                            Previous
+                        </button>
+                        <span>
+                            Page {currentPage} of {totalPages}
+                        </span>
+                        <button
+                            onClick={handleNextPage}
+                            disabled={currentPage === totalPages}
+                            className="pagination-btn"
+                        >
+                            Next
+                        </button>
+                    </div>
+                )}
             </div>
         </motion.div>
     );

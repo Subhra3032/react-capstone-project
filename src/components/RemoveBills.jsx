@@ -86,8 +86,7 @@ function RemoveBills() {
         if(category) {
             const filtered = list.filter(bill => bill.billCategory === category);
             setFilteredBills(filtered);
-            console.log(filtered);
-            
+            setCurrentPage(1); // Reset to the first page after filtering
         }
     };
 
@@ -146,23 +145,26 @@ function RemoveBills() {
                      )}   
                 </tbody>
             </table>
-            <div className='pagination'>
-                <button
-                    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                    disabled={currentPage === 1}
-                >
-                    Previous
-                </button>
-                <span>
-                    Page {currentPage} of {totalPages}
-                </span>
-                <button
-                    onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-                    disabled={currentPage === totalPages}
-                >
-                    Next
-                </button>
-            </div>
+            {filteredBills.length > 0 && (
+                <div className='pagination'>
+                    <button
+                        onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                        disabled={currentPage === 1}
+                    >
+                        Previous
+                    </button>
+                    <span>
+                        Page {currentPage} of {totalPages}
+                    </span>
+                    <button
+                        onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                        disabled={currentPage === totalPages}
+                    >
+                        Next
+                    </button>
+                </div>
+            )}
+            
             <button onClick={handleDelete} className='delete-button'>
                     Delete
             </button>
