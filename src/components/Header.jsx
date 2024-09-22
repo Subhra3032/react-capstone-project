@@ -3,8 +3,12 @@ import './Header.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBell, faUser } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 function Header() {
+
+    // Get the username from the Redux store
+    const username = useSelector((state) => state.user);
 
     return (
         <div className='header'>
@@ -17,7 +21,7 @@ function Header() {
                     Notification
                 </div>
                 <div className='tab'>
-                    Profile
+                    {username ? username : "Profile"}
                     <FontAwesomeIcon icon={faUser} className='fa-icon' />
                 </div>
             </div>

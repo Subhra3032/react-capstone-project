@@ -18,6 +18,7 @@ import Success from "./components/Success";
 import Failure from "./components/Failure";
 import { ToastContainer } from "react-toastify"; // Import ToastContainer
 import 'react-toastify/dist/ReactToastify.css';  // Import toastify CSS
+import Login from "./components/Login";
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
             pauseOnHover
           />
           <Routes>
+            <Route path="/login" element={<Login />} />
             <Route path="/" element={<HomePage />} />
             <Route path="/manageBills" element={<ManageBills />} />
             <Route path="/manageBills/addBills" element={<AddBills />} />

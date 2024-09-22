@@ -4,10 +4,14 @@ import { motion } from 'framer-motion';
 import Header from './Header';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useSelector } from 'react-redux';
 
 
 
 function AddBills() {
+    // Get the username from the Redux store
+    const username = useSelector((state) => state.user);
+
     const [billName, setBillName] = useState('');
     const [category, setCategory] = useState('');
     const [billDate, setBillDate] = useState('');
@@ -22,6 +26,13 @@ function AddBills() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Check if the user is logged in
+        if(!username) {
+            toast.warning('Please log in to add a new bill.');
+            navigate('/login');  // Redirect to the login page if needed
+            return;
+        }
         
         // Create the JSON object
         const billData = {
@@ -34,7 +45,7 @@ function AddBills() {
             notes: notes,
             isRecurring: isRecurring ? 'Y' : 'N',
             paymentStatus: 'Unpaid',
-            userId: 'user123',
+            userId: username,
         }
 
         // Console log data for debugging
