@@ -131,7 +131,7 @@ const UpcomingBill = () => {
               ))
             ) : (
               <tr>
-                <td colSpan={4}>No bills found</td>
+                <td colSpan={7}>No bills found</td>
               </tr>
             )}
           </tbody>
