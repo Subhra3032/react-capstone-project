@@ -49,10 +49,21 @@ const OverdueBill = () => {
 
     const paymentDetails = {
       bills: selectedBills.map((bill) => ({
+        name: bill.billName,
         category: bill.billCategory,
         amountDue: bill.amount,
         totalAmount: bill.amount,
       })),
+      customer: {
+        name: username,
+        address: {
+          line1: "123 Main St",
+          state: "MH",
+          city: "Mumbai",
+          postal_code: "400001",
+          country: "IN",
+        },
+      },
     };
 
     try {
